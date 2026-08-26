@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سبد خرید | ZOROUFE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F6FB; --bg-soft:#FFFFFF; --ink:#2B2A33; --ink-soft:#6B6875;
+    --violet:#8B6CF2; --blue:#4E9CFF; --teal:#3EE0C4;
+    --glass:rgba(0,0,0,0.04); --glass-border:rgba(0,0,0,0.1);
+    --line:rgba(0,0,0,0.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;position:relative;}
+  a{text-decoration:none;color:inherit;} ul{list-style:none;} button{font-family:inherit;border:none;background:none;cursor:pointer;}
+  input{font-family:inherit;}
+
+  .orb-field{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+  .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.35;}
+  .orb-1{width:440px;height:440px;background:radial-gradient(circle,var(--violet),transparent 70%);top:-12%;right:-10%;}
+  .orb-2{width:380px;height:380px;background:radial-gradient(circle,var(--blue),transparent 70%);bottom:-12%;left:-10%;}
+
+  header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.78);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);}
+  .nav-wrap{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;}
+  .logo{font-size:20px;font-weight:800;display:flex;align-items:center;gap:9px;}
+  .logo-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--blue));box-shadow:0 0 14px var(--violet);}
+  .logo-text{display:flex;flex-direction:column;line-height:1;gap:3px;}
+  .logo-main{font-size:19px;font-weight:800;letter-spacing:-0.01em;}
+  .logo-sub{font-size:9px;font-weight:600;letter-spacing:0.32em;color:var(--ink-soft);}
+  nav ul{display:flex;gap:34px;font-size:14.5px;font-weight:500;color:var(--ink-soft);}
+  .nav-actions{display:flex;align-items:center;gap:14px;}
+  .icon-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink);position:relative;}
+  .cart-count{position:absolute;top:0;left:0;background:var(--blue);color:#08080A;font-size:9px;font-weight:800;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .burger{display:none;width:38px;height:38px;align-items:center;justify-content:center;flex-direction:column;gap:5px;}
+  .burger span{width:20px;height:1.5px;background:var(--ink);}
+  .mobile-panel{position:fixed;top:70px;left:0;right:0;max-height:0;overflow:hidden;transition:max-height .4s ease;background:rgba(255,255,255,0.96);backdrop-filter:blur(20px);z-index:99;}
+  .mobile-panel.open{max-height:280px;border-bottom:1px solid var(--line);}
+  .mobile-panel ul{display:flex;flex-direction:column;padding:20px 32px;gap:20px;font-size:16px;font-weight:600;}
+
+  .page-wrap{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:44px 40px 100px;}
+  .page-wrap h1{font-size:clamp(26px,3vw,36px);font-weight:800;letter-spacing:-0.015em;margin-bottom:36px;}
+
+  .cart-layout{display:grid;grid-template-columns:1.6fr 1fr;gap:32px;align-items:start;}
+
+  /* cart items */
+  .cart-items{display:flex;flex-direction:column;gap:16px;}
+  .cart-item{display:grid;grid-template-columns:100px 1fr auto;gap:20px;align-items:center;padding:18px;border-radius:20px;background:var(--glass);border:1px solid var(--glass-border);transition:opacity .3s ease,transform .3s ease;}
+  .cart-item.removing{opacity:0;transform:translateX(30px);}
+  .item-thumb{width:100px;height:100px;border-radius:14px;flex-shrink:0;}
+  .item-info h3{font-size:15px;font-weight:700;margin-bottom:6px;}
+  .item-info .item-cat{font-size:12px;color:var(--ink-soft);margin-bottom:10px;display:block;}
+  .item-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .item-qty{display:flex;align-items:center;border:1px solid var(--glass-border);border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.03);}
+  .item-qty button{width:32px;height:32px;font-size:15px;color:var(--ink-soft);}
+  .item-qty button:hover{color:var(--ink);}
+  .item-qty span{width:30px;text-align:center;font-size:13.5px;font-weight:700;}
+  .remove-btn{font-size:12.5px;color:var(--ink-soft);display:flex;align-items:center;gap:6px;transition:color .2s ease;}
+  .remove-btn:hover{color:#FF6B81;}
+  .item-price{text-align:left;white-space:nowrap;}
+  .item-price strong{display:block;font-size:15.5px;font-weight:800;}
+  .item-price del{font-size:12px;color:var(--ink-soft);opacity:0.6;}
+
+  .empty-cart{display:none;flex-direction:column;align-items:center;text-align:center;padding:80px 20px;border-radius:22px;background:var(--glass);border:1px solid var(--glass-border);}
+  .empty-cart.show{display:flex;}
+  .empty-cart svg{color:var(--ink-soft);margin-bottom:20px;}
+  .empty-cart h3{font-size:18px;font-weight:700;margin-bottom:10px;}
+  .empty-cart p{font-size:14px;color:var(--ink-soft);margin-bottom:26px;}
+  .empty-cart a{padding:14px 30px;border-radius:100px;font-size:14px;font-weight:700;color:#08080A;background:linear-gradient(100deg,var(--teal),var(--blue));}
+
+  .continue-link{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--ink-soft);margin-top:20px;transition:color .2s ease;}
+  .continue-link:hover{color:var(--ink);}
+
+  /* summary */
+  .summary{position:sticky;top:96px;border-radius:22px;background:var(--glass);border:1px solid var(--glass-border);padding:26px;}
+  .summary h3{font-size:16px;font-weight:800;margin-bottom:22px;}
+  .summary-row{display:flex;justify-content:space-between;font-size:14px;color:var(--ink-soft);padding:10px 0;}
+  .summary-row.total{border-top:1px solid var(--line);margin-top:8px;padding-top:18px;font-size:16px;font-weight:800;color:var(--ink);}
+  .summary-row.discount{color:var(--teal);}
+
+  .coupon-row{display:flex;gap:8px;margin:20px 0;}
+  .coupon-row input{flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--glass-border);background:rgba(255,255,255,0.04);color:var(--ink);font-size:13px;outline:none;transition:border-color .2s ease;}
+  .coupon-row input:focus{border-color:var(--blue);}
+  .coupon-row button{padding:12px 18px;border-radius:10px;font-size:12.5px;font-weight:700;color:var(--ink);border:1px solid var(--glass-border);background:rgba(255,255,255,0.05);white-space:nowrap;transition:border-color .2s ease;}
+  .coupon-row button:hover{border-color:rgba(255,255,255,0.28);}
+  .coupon-msg{font-size:12px;color:var(--teal);margin-bottom:14px;display:none;}
+  .coupon-msg.show{display:block;}
+
+  .checkout-btn{
+    width:100%;padding:16px;border-radius:14px;font-size:15px;font-weight:800;color:#08080A;
+    background:linear-gradient(100deg,var(--teal),var(--blue),var(--violet));background-size:200% 100%;
+    box-shadow:0 0 34px -10px rgba(78,156,255,0.5);transition:background-position .5s ease,transform .25s ease;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+  }
+  .checkout-btn:hover{background-position:100% 0;transform:translateY(-2px);}
+  .secure-note{display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;color:var(--ink-soft);margin-top:16px;}
+
+  @media(max-width:1024px){
+    .cart-layout{grid-template-columns:1fr;}
+    .summary{position:static;}
+  }
+  @media(max-width:768px){
+    nav{display:none;}
+    .burger{display:flex;}
+    .nav-wrap{padding:16px 20px;}
+  }
+  @media(max-width:600px){
+    .page-wrap{padding:28px 20px 70px;}
+    .cart-item{grid-template-columns:70px 1fr;gap:14px;}
+    .item-thumb{width:70px;height:70px;}
+    .item-price{grid-column:1 / -1;display:flex;justify-content:space-between;align-items:center;text-align:right;border-top:1px solid var(--line);padding-top:12px;margin-top:6px;}
+  }
+  .search-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:90px 20px;}
+  .search-overlay.show{display:flex;}
+  .search-box{width:100%;max-width:560px;background:var(--bg-soft);border:1px solid var(--glass-border);border-radius:20px;padding:8px 8px 8px 18px;display:flex;align-items:center;gap:12px;color:var(--ink-soft);}
+  .search-box input{flex:1;background:none;border:none;outline:none;color:var(--ink);font-family:inherit;font-size:15px;padding:12px 4px;}
+  .search-box button.search-close{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);flex-shrink:0;transition:background .2s ease;}
+  .search-box button.search-close:hover{background:rgba(255,255,255,0.08);}
+
+  :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:8px;}
+</style>
+</head>
+<body>
+
+<div class="orb-field"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+
+<header>
+  <div class="nav-wrap">
+    <a href="index.html" class="logo"><span class="logo-dot"></span><span class="logo-text"><span class="logo-main">ZOROUFE</span><span class="logo-sub">LUXE</span></span></a>
+    <nav><ul>
+      <li><a href="index.html">خانه</a></li>
+      <li><a href="04-product-listing.html">دسته‌بندی‌ها</a></li>
+      <li><a href="04-product-listing.html">برندها</a></li>
+      <li><a href="04-product-listing.html?discount=1">تخفیف‌ها</a></li>
+    </ul></nav>
+    <div class="nav-actions">
+      <button type="button" class="icon-btn" id="searchBtn" aria-label="جستجو"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      <a href="16-wishlist.html" class="icon-btn" aria-label="علاقه‌مندی‌های من"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.6-10-9.2C.5 8 2 4.5 5.6 4c2.2-.3 4 .9 6.4 3.4C14.4 4.9 16.2 3.7 18.4 4c3.6.5 5.1 4 3.6 7.8-2.5 4.6-10 9.2-10 9.2z"/></svg></a>
+        <a href="15-login.html" id="accountBtn" class="icon-btn" aria-label="حساب کاربری"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+        <a href="06-cart.html" class="icon-btn" aria-label="سبد خرید"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg><span class="cart-count" id="headerCartCount">3</span></a>
+      <button class="burger" id="burgerBtn"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-panel" id="mobilePanel">
+    <ul><li><a href="index.html">خانه</a></li><li><a href="04-product-listing.html">دسته‌بندی‌ها</a></li><li><a href="04-product-listing.html">برندها</a></li><li><a href="04-product-listing.html?discount=1">تخفیف‌ها</a></li></ul>
+  </div>
+</header>
+
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    <input type="text" id="searchInput" placeholder="دنبال چی می‌گردی؟">
+    <button class="search-close" id="searchClose" aria-label="بستن جستجو">✕</button>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <h1>سبد خرید</h1>
+
+  <div class="cart-layout">
+    <div>
+      <div class="cart-items" id="cartItems"></div>
+
+      <div class="empty-cart" id="emptyCart">
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+        <h3>سبد خریدت خالیه</h3>
+        <p>هنوز چیزی به سبدت اضافه نکردی. بریم بگردیم؟</p>
+        <a href="04-product-listing.html">مشاهده محصولات</a>
+      </div>
+
+      <a href="04-product-listing.html" class="continue-link">→ ادامه‌ی خرید</a>
+    </div>
+
+    <aside class="summary">
+      <h3>خلاصه‌ی سفارش</h3>
+      <div class="summary-row"><span>جمع اقلام</span><span id="sumSubtotal">۰ ت</span></div>
+      <div class="summary-row"><span>هزینه‌ی ارسال</span><span id="sumShipping">درب منزل</span></div>
+      <div class="summary-row discount" id="sumDiscountRow" style="display:none;"><span>تخفیف کد</span><span id="sumDiscount">۰ ت</span></div>
+      <div class="summary-row total"><span>مبلغ نهایی</span><span id="sumTotal">۰ ت</span></div>
+
+      <div class="coupon-row">
+        <input type="text" placeholder="کد تخفیف" id="couponInput">
+        <button id="couponApply">اعمال کد</button>
+      </div>
+      <p class="coupon-msg" id="couponMsg">کد تخفیف اعمال شد ✓</p>
+
+      <a href="07-checkout.html" class="checkout-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        ادامه‌ی فرآیند خرید
+      </a>
+      <div class="secure-note">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        پرداخت امن با درگاه بانکی معتبر
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script>
+  document.getElementById('burgerBtn').addEventListener('click', () => {
+    document.getElementById('mobilePanel').classList.toggle('open');
+  });
+
+  // ---------------- سبد خرید واقعی از API ----------------
+  const fmt = n => Math.round(n).toLocaleString('fa-IR') + ' ت';
+  let cartData = { items: [], subtotal: 0, discount: 0, total: 0, couponCode: null };
+
+  function render(){
+    const wrap = document.getElementById('cartItems');
+    const empty = document.getElementById('emptyCart');
+
+    if (cartData.items.length === 0){
+      wrap.innerHTML = '';
+      empty.classList.add('show');
+    } else {
+      empty.classList.remove('show');
+      wrap.innerHTML = cartData.items.map(item => `
+        <div class="cart-item" data-item-id="${item.itemId}">
+          <div class="item-thumb" style="background:linear-gradient(150deg,${gradFor(item.productId)});"></div>
+          <div class="item-info">
+            <span class="item-cat">${item.selectedColor ? item.selectedColor + (item.selectedSize ? ' / ' + item.selectedSize : '') : (item.selectedSize || '')}</span>
+            <h3>${item.name}</h3>
+            <div class="item-meta">
+              <div class="item-qty">
+                <button class="qty-minus">−</button>
+                <span>${item.qty.toLocaleString('fa-IR')}</span>
+                <button class="qty-plus">+</button>
+              </div>
+              <button class="remove-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                حذف
+              </button>
+            </div>
+          </div>
+          <div class="item-price">
+            <strong>${fmt(item.lineTotal)}</strong>
+          </div>
+        </div>
+      `).join('');
+    }
+    updateSummary();
+  }
+
+  function updateSummary(){
+    document.getElementById('sumSubtotal').textContent = fmt(cartData.subtotal);
+    document.getElementById('sumTotal').textContent = fmt(cartData.total);
+
+    const discountRow = document.getElementById('sumDiscountRow');
+    if (cartData.discount > 0){
+      discountRow.style.display = 'flex';
+      document.getElementById('sumDiscount').textContent = '−' + fmt(cartData.discount);
+    } else {
+      discountRow.style.display = 'none';
+    }
+
+    const couponMsg = document.getElementById('couponMsg');
+    if (cartData.couponCode) {
+      couponMsg.textContent = `کد «${cartData.couponCode}» اعمال شد ✓`;
+      couponMsg.classList.add('show');
+    }
+
+    const totalQty = cartData.items.reduce((s, i) => s + i.qty, 0);
+    document.getElementById('headerCartCount').textContent = totalQty.toLocaleString('fa-IR');
+  }
+
+  async function loadCart(){
+    const wrap = document.getElementById('cartItems');
+    wrap.innerHTML = `<p style="color:var(--ink-soft);text-align:center;padding:40px 0;">در حال بارگذاری سبد خرید...</p>`;
+    try {
+      cartData = await getCart();
+      render();
+    } catch (err) {
+      wrap.innerHTML = `<p style="color:var(--ink-soft);text-align:center;padding:40px 0;">
+        اتصال به سرور برقرار نشد. مطمئن شو بک‌اند روی <code>${API_BASE}</code> در حال اجراست.
+      </p>`;
+      console.error(err);
+    }
+  }
+
+  document.getElementById('cartItems').addEventListener('click', async (e) => {
+    const row = e.target.closest('.cart-item');
+    if (!row) return;
+    const itemId = row.dataset.itemId;
+    const item = cartData.items.find(i => i.itemId === itemId);
+    if (!item) return;
+
+    if (e.target.closest('.qty-plus')){
+      cartData = await updateCartItemQty(itemId, item.qty + 1);
+      render();
+      refreshCartBadge();
+    }
+    if (e.target.closest('.qty-minus')){
+      if (item.qty > 1){
+        cartData = await updateCartItemQty(itemId, item.qty - 1);
+        render();
+        refreshCartBadge();
+      }
+    }
+    if (e.target.closest('.remove-btn')){
+      row.classList.add('removing');
+      setTimeout(async () => {
+        cartData = await removeCartItem(itemId);
+        render();
+        refreshCartBadge();
+      }, 280);
+    }
+  });
+
+  document.getElementById('couponApply').addEventListener('click', async () => {
+    const code = document.getElementById('couponInput').value.trim();
+    const msg = document.getElementById('couponMsg');
+    if (!code) return;
+    try {
+      cartData = await applyCoupon(code);
+      msg.textContent = `کد تخفیف اعمال شد — ${cartData.couponCode} ✓`;
+      msg.classList.add('show');
+    } catch (err) {
+      msg.textContent = err.message || 'این کد تخفیف معتبر نیست';
+      msg.classList.add('show');
+    }
+    updateSummary();
+  });
+
+  loadCart();
+  // search overlay
+  const searchBtn = document.getElementById('searchBtn');
+  const searchOverlay = document.getElementById('searchOverlay');
+  const searchInput = document.getElementById('searchInput');
+  const searchClose = document.getElementById('searchClose');
+  searchBtn.addEventListener('click', () => {
+    searchOverlay.classList.add('show');
+    searchInput.focus();
+  });
+  searchClose.addEventListener('click', () => searchOverlay.classList.remove('show'));
+  searchOverlay.addEventListener('click', (e) => { if (e.target === searchOverlay) searchOverlay.classList.remove('show'); });
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && searchInput.value.trim()){
+      window.location.href = '04-product-listing.html?search=' + encodeURIComponent(searchInput.value.trim());
+    }
+  });
+</script>
+</body>
+</html>

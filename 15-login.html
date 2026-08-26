@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ورود | ZOROUFE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F6FB; --bg-soft:#FFFFFF; --ink:#2B2A33; --ink-soft:#6B6875;
+    --violet:#8B6CF2; --blue:#4E9CFF; --teal:#3EE0C4;
+    --glass:rgba(0,0,0,0.04); --glass-border:rgba(0,0,0,0.1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  a{color:inherit;} input{font-family:inherit;}
+  .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.35;}
+  .orb-1{width:440px;height:440px;background:radial-gradient(circle,var(--violet),transparent 70%);top:-12%;right:-10%;}
+  .orb-2{width:380px;height:380px;background:radial-gradient(circle,var(--blue),transparent 70%);bottom:-12%;left:-10%;}
+
+  .login-card{position:relative;z-index:1;width:100%;max-width:400px;background:var(--glass);border:1px solid var(--glass-border);border-radius:22px;padding:36px 32px;margin:20px;}
+  .logo{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:6px;}
+  .logo-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--blue));box-shadow:0 0 14px var(--violet);}
+  .logo-text{font-size:19px;font-weight:800;}
+  .login-sub{text-align:center;font-size:12.5px;color:var(--ink-soft);margin-bottom:28px;line-height:1.8;}
+  .form-field{margin-bottom:16px;}
+  .form-field label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:8px;}
+  .form-field input{width:100%;padding:13px 16px;border-radius:12px;border:1px solid var(--glass-border);background:rgba(255,255,255,0.04);color:var(--ink);font-size:14px;outline:none;transition:border-color .2s;text-align:center;letter-spacing:1px;}
+  .form-field input:focus{border-color:var(--blue);}
+  .action-btn{width:100%;padding:14px;border-radius:12px;font-size:14.5px;font-weight:800;color:#08080A;background:linear-gradient(100deg,var(--teal),var(--blue),var(--violet));background-size:200% 100%;transition:background-position .5s ease;border:none;cursor:pointer;font-family:inherit;margin-top:6px;}
+  .action-btn:hover{background-position:100% 0;}
+  .action-btn:disabled{opacity:0.6;cursor:not-allowed;}
+  .err-msg{font-size:13px;color:#FF6B81;margin-top:14px;display:none;text-align:center;}
+  .err-msg.show{display:block;}
+  .hint-msg{font-size:12px;color:var(--teal);margin-top:14px;display:none;text-align:center;line-height:1.8;}
+  .hint-msg.show{display:block;}
+  .back-link{display:block;text-align:center;margin-top:20px;font-size:12.5px;color:var(--ink-soft);text-decoration:none;}
+  .back-link:hover{color:var(--ink);}
+  .edit-phone{display:block;text-align:center;margin-top:14px;font-size:12px;color:var(--ink-soft);background:none;border:none;cursor:pointer;font-family:inherit;text-decoration:underline;}
+  #step2{display:none;}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div><div class="orb orb-2"></div>
+
+<div class="login-card">
+  <div class="logo"><span class="logo-dot"></span><span class="logo-text">ZOROUFE</span></div>
+  <p class="login-sub">برای ثبت سفارش، دیدن سفارش‌ها و علاقه‌مندی‌هات، وارد حسابت شو.</p>
+
+  <!-- مرحله‌ی ۱: شماره موبایل -->
+  <div id="step1">
+    <div class="form-field">
+      <label>شماره موبایل</label>
+      <input type="tel" id="phoneInput" placeholder="۰۹1۲۳۴۵۶۷۸۹" inputmode="numeric" maxlength="11">
+    </div>
+    <button class="action-btn" id="sendOtpBtn">دریافت کد تایید</button>
+    <p class="err-msg" id="step1Err"></p>
+  </div>
+
+  <!-- مرحله‌ی ۲: کد تایید -->
+  <div id="step2">
+    <div class="form-field">
+      <label>کد تایید ۴ رقمی</label>
+      <input type="text" id="codeInput" placeholder="____" inputmode="numeric" maxlength="4">
+    </div>
+    <button class="action-btn" id="verifyBtn">تایید و ورود</button>
+    <p class="err-msg" id="step2Err"></p>
+    <p class="hint-msg show" id="otpHint">فعلاً سرویس پیامک وصل نیست — کد تایید رو از ترمینال سرور (همون‌جایی که npm run dev زدی) بخون.</p>
+    <button class="edit-phone" id="editPhoneBtn">ویرایش شماره موبایل</button>
+  </div>
+
+  <a href="index.html" class="back-link">← بازگشت به فروشگاه</a>
+</div>
+
+<script src="api.js"></script>
+<script>
+  if (isLoggedIn()) { window.location.href = 'index.html'; }
+   // ارقام فارسی/عربی رو به انگلیسی تبدیل می‌کنه، چون سرور فقط ارقام انگلیسی رو قبول می‌کنه
+  function toEnglishDigits(str) {
+    const persian = '۰۱۲۳۴۵۶۷۸۹';
+    const arabic = '٠١٢٣٤٥٦٧٨٩';
+    return str.replace(/[۰-۹٠-٩]/g, (ch) => {
+      const pIdx = persian.indexOf(ch);
+      if (pIdx > -1) return pIdx;
+      const aIdx = arabic.indexOf(ch);
+      if (aIdx > -1) return aIdx;
+      return ch;
+    });
+  }
+  let currentPhone = '';
+
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const phoneInput = document.getElementById('phoneInput');
+  const codeInput = document.getElementById('codeInput');
+  const sendOtpBtn = document.getElementById('sendOtpBtn');
+  const verifyBtn = document.getElementById('verifyBtn');
+  const step1Err = document.getElementById('step1Err');
+  const step2Err = document.getElementById('step2Err');
+
+  sendOtpBtn.addEventListener('click', async () => {
+    step1Err.classList.remove('show');
+    const phone = toEnglishDigits(phoneInput.value.trim());
+    if (!/^09\d{9}$/.test(phone)) {
+      step1Err.textContent = 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع بشه';
+      step1Err.classList.add('show');
+      return;
+    }
+    sendOtpBtn.disabled = true;
+    sendOtpBtn.textContent = 'در حال ارسال...';
+    try {
+      await requestOtp(phone);
+      currentPhone = phone;
+      step1.style.display = 'none';
+      step2.style.display = 'block';
+      codeInput.focus();
+    } catch (err) {
+      step1Err.textContent = err.message || 'ارسال کد با خطا مواجه شد';
+      step1Err.classList.add('show');
+    } finally {
+      sendOtpBtn.disabled = false;
+      sendOtpBtn.textContent = 'دریافت کد تایید';
+    }
+  });
+
+  verifyBtn.addEventListener('click', async () => {
+    step2Err.classList.remove('show');
+    const code = toEnglishDigits(codeInput.value.trim());
+    if (code.length !== 4) {
+      step2Err.textContent = 'کد تایید باید ۴ رقم باشه';
+      step2Err.classList.add('show');
+      return;
+    }
+    verifyBtn.disabled = true;
+    verifyBtn.textContent = 'در حال بررسی...';
+    try {
+      await verifyOtp(currentPhone, code);
+      window.location.href = 'index.html';
+    } catch (err) {
+      step2Err.textContent = err.message || 'کد تایید اشتباه است';
+      step2Err.classList.add('show');
+    } finally {
+      verifyBtn.disabled = false;
+      verifyBtn.textContent = 'تایید و ورود';
+    }
+  });
+
+  document.getElementById('editPhoneBtn').addEventListener('click', () => {
+    step2.style.display = 'none';
+    step1.style.display = 'block';
+    codeInput.value = '';
+    step2Err.classList.remove('show');
+  });
+</script>
+</body>
+</html>

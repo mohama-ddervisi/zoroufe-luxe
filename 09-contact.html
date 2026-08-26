@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تماس با ما | ZOROUFE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F6FB; --bg-soft:#FFFFFF; --ink:#2B2A33; --ink-soft:#6B6875;
+    --violet:#8B6CF2; --blue:#4E9CFF; --teal:#3EE0C4;
+    --glass:rgba(0,0,0,0.04); --glass-border:rgba(0,0,0,0.1);
+    --line:rgba(0,0,0,0.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;position:relative;}
+  a{text-decoration:none;color:inherit;} ul{list-style:none;} button{font-family:inherit;border:none;background:none;cursor:pointer;}
+  input,textarea{font-family:inherit;}
+
+  .orb-field{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+  .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.35;}
+  .orb-1{width:440px;height:440px;background:radial-gradient(circle,var(--violet),transparent 70%);top:-12%;right:-10%;}
+  .orb-2{width:380px;height:380px;background:radial-gradient(circle,var(--blue),transparent 70%);bottom:-12%;left:-10%;}
+
+  header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.78);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);}
+  .nav-wrap{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;}
+  .logo{font-size:20px;font-weight:800;display:flex;align-items:center;gap:9px;}
+  .logo-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--blue));box-shadow:0 0 14px var(--violet);}
+  .logo-text{display:flex;flex-direction:column;line-height:1;gap:3px;}
+  .logo-main{font-size:19px;font-weight:800;letter-spacing:-0.01em;}
+  .logo-sub{font-size:9px;font-weight:600;letter-spacing:0.32em;color:var(--ink-soft);}
+  nav ul{display:flex;gap:34px;font-size:14.5px;font-weight:500;color:var(--ink-soft);}
+  nav ul li a{position:relative;padding:6px 0;transition:color .25s;}
+  nav ul li a:hover{color:var(--ink);}
+  .nav-actions{display:flex;align-items:center;gap:14px;}
+  .icon-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink);position:relative;transition:background .2s;}
+  .icon-btn:hover{background:var(--glass);}
+  .cart-count{position:absolute;top:0;left:0;background:var(--blue);color:#08080A;font-size:9px;font-weight:800;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .cta-btn{position:relative;padding:11px 26px;border-radius:100px;font-size:13.5px;font-weight:700;color:var(--ink);background:var(--bg-soft);border:1px solid var(--glass-border);white-space:nowrap;transition:transform .25s ease;}
+  .cta-btn:hover{transform:translateY(-2px);}
+  .burger{display:none;width:38px;height:38px;align-items:center;justify-content:center;flex-direction:column;gap:5px;}
+  .burger span{width:20px;height:1.5px;background:var(--ink);border-radius:2px;}
+  .mobile-panel{position:fixed;top:70px;left:0;right:0;max-height:0;overflow:hidden;transition:max-height .4s ease;background:rgba(255,255,255,0.96);backdrop-filter:blur(20px);z-index:99;}
+  .mobile-panel.open{max-height:320px;border-bottom:1px solid var(--line);}
+  .mobile-panel ul{display:flex;flex-direction:column;padding:20px 32px;gap:20px;font-size:16px;font-weight:600;}
+
+  @media(max-width:768px){ nav{display:none;} .burger{display:flex;} .nav-wrap{padding:16px 20px;} }
+
+  .search-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:90px 20px;}
+  .search-overlay.show{display:flex;}
+  .search-box{width:100%;max-width:560px;background:var(--bg-soft);border:1px solid var(--glass-border);border-radius:20px;padding:8px 8px 8px 18px;display:flex;align-items:center;gap:12px;color:var(--ink-soft);}
+  .search-box input{flex:1;background:none;border:none;outline:none;color:var(--ink);font-family:inherit;font-size:15px;padding:12px 4px;}
+  .search-box button.search-close{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);flex-shrink:0;transition:background .2s ease;}
+  .search-box button.search-close:hover{background:rgba(255,255,255,0.08);}
+
+  .page-wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:56px 40px 100px;}
+  .page-wrap.wide{max-width:1200px;}
+  .breadcrumb{font-size:13px;color:var(--ink-soft);margin-bottom:20px;}
+  .breadcrumb a:hover{color:var(--ink);}
+  .page-title{font-size:clamp(28px,4vw,42px);font-weight:800;letter-spacing:-0.02em;margin-bottom:16px;}
+  .page-lead{font-size:15.5px;color:var(--ink-soft);line-height:1.9;max-width:680px;margin-bottom:44px;}
+
+  footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:60px 40px 30px;margin-top:60px;}
+  .footer-grid{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1.2fr;gap:32px;padding-bottom:40px;}
+  .footer-col h4{font-size:13.5px;font-weight:700;margin-bottom:18px;}
+  .footer-col ul{display:flex;flex-direction:column;gap:12px;}
+  .footer-col ul li a{font-size:13.5px;color:var(--ink-soft);transition:color .2s;}
+  .footer-col ul li a:hover{color:var(--ink);}
+  .footer-col.brand p{font-size:13px;color:var(--ink-soft);line-height:1.8;margin-top:14px;max-width:260px;}
+  .footer-col.contact ul li{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);}
+  .footer-bottom{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-soft);flex-wrap:wrap;gap:14px;}
+  .payment-badges{display:flex;gap:10px;}
+  .payment-badges span{padding:5px 12px;border-radius:6px;background:var(--glass);border:1px solid var(--glass-border);font-size:11px;}
+  @media(max-width:900px){ .footer-grid{grid-template-columns:1fr 1fr;} }
+  @media(max-width:600px){ .footer-grid{grid-template-columns:1fr;} .page-wrap{padding:36px 20px 70px;} }
+
+  :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:8px;}
+
+  .contact-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:40px;align-items:start;}
+  .contact-info-card{border-radius:20px;background:var(--glass);border:1px solid var(--glass-border);padding:28px;}
+  .contact-info-card h3{font-size:15.5px;font-weight:800;margin-bottom:20px;}
+  .info-row{display:flex;align-items:flex-start;gap:14px;margin-bottom:20px;}
+  .info-row svg{color:var(--blue);flex-shrink:0;margin-top:2px;}
+  .info-row strong{display:block;font-size:13.5px;font-weight:700;margin-bottom:3px;}
+  .info-row span{font-size:13px;color:var(--ink-soft);}
+  .social-row{display:flex;gap:10px;margin-top:24px;}
+  .social-row a{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);color:var(--ink-soft);transition:all .2s;}
+  .social-row a:hover{color:var(--ink);border-color:rgba(255,255,255,0.28);}
+  .contact-form{border-radius:20px;background:var(--glass);border:1px solid var(--glass-border);padding:28px;}
+  .form-field{margin-bottom:16px;}
+  .form-field label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:8px;}
+  .form-field input,.form-field textarea{width:100%;padding:13px 16px;border-radius:12px;border:1px solid var(--glass-border);background:rgba(255,255,255,0.04);color:var(--ink);font-size:14px;outline:none;transition:border-color .2s;}
+  .form-field input:focus,.form-field textarea:focus{border-color:var(--blue);}
+  .form-field textarea{resize:vertical;min-height:110px;}
+  .submit-btn{width:100%;padding:15px;border-radius:12px;font-size:14.5px;font-weight:800;color:#08080A;background:linear-gradient(100deg,var(--teal),var(--blue),var(--violet));background-size:200% 100%;transition:background-position .5s ease,transform .25s ease;}
+  .submit-btn:hover{background-position:100% 0;transform:translateY(-2px);}
+  .form-msg{font-size:13px;color:var(--teal);margin-top:12px;display:none;}
+  .form-msg.show{display:block;}
+  @media(max-width:800px){ .contact-layout{grid-template-columns:1fr;} }
+
+</style>
+</head>
+<body>
+
+<div class="orb-field"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+
+<header>
+  <div class="nav-wrap">
+    <a href="index.html" class="logo"><span class="logo-dot"></span><span class="logo-text"><span class="logo-main">ZOROUFE</span><span class="logo-sub">LUXE</span></span></a>
+    <nav><ul>
+      <li><a href="index.html">خانه</a></li>
+      <li><a href="04-product-listing.html">دسته‌بندی‌ها</a></li>
+      <li><a href="04-product-listing.html">برندها</a></li>
+      <li><a href="04-product-listing.html">تخفیف‌ها</a></li>
+      <li><a href="09-contact.html">تماس</a></li>
+    </ul></nav>
+    <div class="nav-actions">
+      <button type="button" class="icon-btn" id="searchBtn" aria-label="جستجو"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      <a href="16-wishlist.html" class="icon-btn" aria-label="علاقه‌مندی‌های من"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.6-10-9.2C.5 8 2 4.5 5.6 4c2.2-.3 4 .9 6.4 3.4C14.4 4.9 16.2 3.7 18.4 4c3.6.5 5.1 4 3.6 7.8-2.5 4.6-10 9.2-10 9.2z"/></svg></a>
+        <a href="15-login.html" id="accountBtn" class="icon-btn" aria-label="حساب کاربری"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+        <a href="06-cart.html" class="icon-btn" aria-label="سبد خرید"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg><span class="cart-count" id="headerCartCount">0</span></a>
+      <a href="04-product-listing.html" class="cta-btn">فروشگاه</a>
+      <button class="burger" id="burgerBtn"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-panel" id="mobilePanel">
+    <ul>
+      <li><a href="index.html">خانه</a></li><li><a href="04-product-listing.html">دسته‌بندی‌ها</a></li><li><a href="04-product-listing.html">برندها</a></li><li><a href="04-product-listing.html">تخفیف‌ها</a></li><li><a href="09-contact.html">تماس</a></li>
+      <li><a href="04-product-listing.html" class="cta-btn">فروشگاه</a></li>
+    </ul>
+  </div>
+</header>
+
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    <input type="text" id="searchInput" placeholder="دنبال چی می‌گردی؟">
+    <button class="search-close" id="searchClose" aria-label="بستن جستجو">✕</button>
+  </div>
+</div>
+
+
+<div class="page-wrap wide">
+  <div class="breadcrumb"><a href="index.html">خانه</a> / تماس با ما</div>
+  <h1 class="page-title">تماس با ما</h1>
+  <p class="page-lead">هر سوال یا پیشنهادی داری، خوشحال می‌شیم بشنویم. تیم پشتیبانی زوروفه هر روز هفته پاسخگوته.</p>
+
+  <div class="contact-layout">
+    <div class="contact-info-card">
+      <h3>راه‌های ارتباطی</h3>
+      <div class="info-row">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92z"/></svg>
+        <div><strong>تلفن پشتیبانی</strong><span>+989105452530 (۱۲ صبح تا ۹ شب)</span></div>
+      </div>
+      <div class="info-row">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="m4 4 8 8 8-8"/></svg>
+        
+      </div>
+      <div class="info-row">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        
+      </div>
+      <div class="social-row">
+        <a href="#" aria-label="اینستاگرام"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+        <a href="#" aria-label="تلگرام"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg></a>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <h3 style="font-size:15.5px;font-weight:800;margin-bottom:20px;">فرم تماس</h3>
+     <form id="contactForm">
+        <div class="form-field"><label>نام و نام خانوادگی</label><input type="text" id="cfName" placeholder="نام شما" required></div>
+        <div class="form-field"><label>ایمیل یا شماره موبایل</label><input type="text" id="cfContact" placeholder="you@email.com" required></div>
+        <div class="form-field"><label>پیام</label><textarea id="cfMessage" placeholder="پیامتون رو اینجا بنویسید..." required></textarea></div> <button type="submit" class="submit-btn">ارسال پیام</button>
+        <p class="form-msg" id="contactMsg">پیامت ارسال شد! به‌زودی باهات تماس می‌گیریم ✓</p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-col brand">
+      <a href="index.html" class="logo"><span class="logo-dot"></span><span class="logo-text"><span class="logo-main">ZOROUFE</span><span class="logo-sub">LUXE</span></span></a>
+      <p>فروشگاه آنلاین لوازم خانه و آشپزخانه با کیفیت لوکس و قیمت منصفانه.</p>
+    </div>
+    <div class="footer-col">
+      <h4>دسته‌بندی‌ها</h4>
+      <ul>
+        <li><a href="04-product-listing.html?cat=kitchen">ظروف و آشپزخانه</a></li>
+        <li><a href="04-product-listing.html?cat=decor">دکوراسیون</a></li>
+        <li><a href="04-product-listing.html?cat=lighting">نور و روشنایی</a></li>
+        <li><a href="04-product-listing.html?cat=cleaning">نظافت خانه</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>شرکت</h4>
+      <ul>
+        <li><a href="08-about.html">درباره ما</a></li>
+        <li><a href="04-product-listing.html">برندهای ما</a></li>
+       
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>خدمات مشتریان</h4>
+      <ul>
+        <li><a href="11-order-tracking.html">پیگیری سفارش</a></li>
+        <li><a href="12-return-policy.html">شرایط بازگشت کالا</a></li>
+        <li><a href="10-faq.html">سوالات متداول</a></li>
+        <li><a href="09-contact.html">تماس با ما</a></li>
+      </ul>
+    </div>
+    <div class="footer-col contact">
+      <h4>ارتباط با ما</h4>
+      <ul>
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92z"/></svg> +989105452530</li>
+        
+        
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="copy">© ۱۴۰۵ زوروفه لوکس. تمامی حقوق محفوظ است.</span>
+    
+  </div>
+</footer>
+
+<script src="api.js"></script>
+<script>
+  document.getElementById('burgerBtn').addEventListener('click', () => {
+    document.getElementById('mobilePanel').classList.toggle('open');
+  });
+  const searchBtn = document.getElementById('searchBtn');
+  const searchOverlay = document.getElementById('searchOverlay');
+  const searchInput = document.getElementById('searchInput');
+  const searchClose = document.getElementById('searchClose');
+  searchBtn.addEventListener('click', () => { searchOverlay.classList.add('show'); searchInput.focus(); });
+  searchClose.addEventListener('click', () => searchOverlay.classList.remove('show'));
+  searchOverlay.addEventListener('click', (e) => { if (e.target === searchOverlay) searchOverlay.classList.remove('show'); });
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && searchInput.value.trim()){
+      window.location.href = '04-product-listing.html?search=' + encodeURIComponent(searchInput.value.trim());
+    }
+  });
+
+ const contactForm = document.getElementById('contactForm');
+  const contactMsg = document.getElementById('contactMsg');
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = contactForm.querySelector('.submit-btn');
+    submitBtn.disabled = true;
+    try {
+      await sendContactMessage({
+        name: document.getElementById('cfName').value.trim(),
+        contact: document.getElementById('cfContact').value.trim(),
+        message: document.getElementById('cfMessage').value.trim(),
+      });
+      contactMsg.textContent = 'پیامت ارسال شد! به‌زودی باهات تماس می‌گیریم ✓';
+      contactMsg.classList.add('show');
+      contactForm.reset();
+      setTimeout(() => contactMsg.classList.remove('show'), 4000);
+    } catch (err) {
+      contactMsg.textContent = err.message || 'ارسال پیام با خطا مواجه شد';
+      contactMsg.style.color = '#FF6B81';
+      contactMsg.classList.add('show');
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+</script>
+</body>
+</html>

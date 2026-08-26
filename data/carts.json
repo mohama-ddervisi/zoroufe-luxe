@@ -1,0 +1,54 @@
+[
+  {
+    "id": "91cb60a8-6c85-4d12-8a4a-1d84e4d022fb",
+    "items": [],
+    "couponCode": null,
+    "createdAt": "2026-08-10T20:46:05.207Z"
+  },
+  {
+    "id": "0b7f3880-8bbb-406e-ba20-76351ae0b09f",
+    "items": [],
+    "couponCode": null,
+    "createdAt": "2026-08-10T20:46:05.211Z"
+  },
+  {
+    "id": "59106107-8623-4a19-8b56-68f488681234",
+    "items": [],
+    "couponCode": null,
+    "createdAt": "2026-08-10T20:46:05.484Z"
+  },
+  {
+    "id": "b6a2ee0c-e259-4b49-8774-55e0fd6efa71",
+    "items": [
+      {
+        "itemId": "e0a0a38d-be29-4230-9abf-301c7845b270",
+        "productId": "p-b30e12e7",
+        "qty": 3,
+        "selectedColor": null,
+        "selectedSize": null
+      },
+      {
+        "itemId": "f499294c-e4d9-4d70-bd9f-d9c8bb6e6416",
+        "productId": "p-9fd9dc63",
+        "qty": 1,
+        "selectedColor": null,
+        "selectedSize": null
+      },
+      {
+        "itemId": "0510058d-bf4d-4853-93b9-78dbef4099ef",
+        "productId": "p-19ffae17",
+        "qty": 2,
+        "selectedColor": "خاکستری",
+        "selectedSize": null
+      }
+    ],
+    "couponCode": null,
+    "createdAt": "2026-08-10T20:46:05.487Z"
+  },
+  {
+    "id": "cf9d0a31-31df-4aa5-bbdd-6bfaafe729ed",
+    "items": [],
+    "couponCode": null,
+    "createdAt": "2026-08-11T22:58:41.705Z"
+  }
+]

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>محصولات | ZOROUFE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F6FB; --bg-soft:#FFFFFF; --ink:#2B2A33; --ink-soft:#6B6875;
+    --violet:#8B6CF2; --blue:#4E9CFF; --teal:#3EE0C4;
+    --glass:rgba(0,0,0,0.04); --glass-border:rgba(0,0,0,0.1);
+    --line:rgba(0,0,0,0.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Vazirmatn',sans-serif;color:#989898;overflow-x:hidden;position:relative;}
+  a{text-decoration:none;color:inherit;} ul{list-style:none;} button{font-family:inherit;border:none;background:none;cursor:pointer;}
+  input[type="checkbox"]{accent-color:var(--blue);}
+
+  .orb-field{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+  .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.4;}
+  .orb-1{width:460px;height:460px;background:radial-gradient(circle,var(--violet),transparent 70%);top:-12%;right:-10%;}
+  .orb-2{width:400px;height:400px;background:radial-gradient(circle,var(--blue),transparent 70%);bottom:-15%;left:-12%;}
+
+  /* header (shared) */
+  header{position:sticky;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);}
+  .nav-wrap{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;}
+  .logo{font-size:20px;font-weight:800;letter-spacing:-0.01em;display:flex;align-items:center;gap:9px;}
+  .logo-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--blue));box-shadow:0 0 14px var(--violet);}
+  .logo-text{display:flex;flex-direction:column;line-height:1;gap:3px;}
+  .logo-main{font-size:19px;font-weight:800;letter-spacing:-0.01em;}
+  .logo-sub{font-size:9px;font-weight:600;letter-spacing:0.32em;color:var(--ink-soft);}
+  nav ul{display:flex;gap:34px;font-size:14.5px;font-weight:500;color:var(--ink-soft);}
+  nav ul li a{position:relative;padding:6px 0;}
+  nav ul li a.active{color:var(--ink);}
+  nav ul li a::after{content:"";position:absolute;right:0;bottom:0;width:0;height:1px;background:linear-gradient(90deg,var(--violet),var(--blue));transition:width .3s;}
+  nav ul li a:hover::after,nav ul li a.active::after{width:100%;}
+  .nav-actions{display:flex;align-items:center;gap:14px;}
+  .icon-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink);position:relative;transition:background .2s;}
+  .icon-btn:hover{background:var(--glass);}
+  .cart-count{position:absolute;top:0;left:0;background:var(--blue);color:#08080A;font-size:9px;font-weight:800;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .burger{display:none;width:38px;height:38px;align-items:center;justify-content:center;flex-direction:column;gap:5px;}
+  .burger span{width:20px;height:1.5px;background:var(--ink);border-radius:2px;}
+  .mobile-panel{position:fixed;top:70px;left:0;right:0;max-height:0;overflow:hidden;transition:max-height .4s ease;background:rgba(255,255,255,0.96);backdrop-filter:blur(20px);z-index:99;}
+  .mobile-panel.open{max-height:320px;border-bottom:1px solid var(--line);}
+  .mobile-panel ul{display:flex;flex-direction:column;padding:20px 32px;gap:22px;font-size:16px;font-weight:600;}
+
+  /* breadcrumb + page head */
+  .page-wrap{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:32px 40px 100px;}
+  .breadcrumb{font-size:13px;color:var(--ink-soft);margin-bottom:26px;}
+  .breadcrumb a:hover{color:var(--ink);}
+  .breadcrumb .sep{margin:0 8px;opacity:0.5;}
+  .page-head{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-bottom:36px;}
+  .page-head h1{font-size:clamp(26px,3.2vw,38px);font-weight:800;letter-spacing:-0.015em;margin-bottom:8px;}
+  .page-head span.count{font-size:14px;color:var(--ink-soft);}
+
+  .sort-select{position:relative;}
+  .sort-select select{
+    appearance:none;-webkit-appearance:none;
+    background:var(--glass);border:1px solid var(--glass-border);color:#92929a;
+    padding:12px 40px 12px 18px;border-radius:100px;font-size:13.5px;font-weight:600;font-family:inherit;cursor:pointer;
+  }
+  .sort-select::after{content:"";position:absolute;left:16px;top:50%;width:8px;height:8px;border-left:1.5px solid var(--ink-soft);border-bottom:1.5px solid var(--ink-soft);transform:translateY(-65%) rotate(-45deg);pointer-events:none;}
+
+  /* layout */
+  .listing-layout{display:grid;grid-template-columns:270px 1fr;gap:36px;align-items:start;}
+
+  /* sidebar */
+  .filters{background:var(--glass);border:1px solid var(--glass-border);border-radius:22px;padding:26px;position:sticky;top:96px;}
+  .filter-block{padding-bottom:24px;margin-bottom:24px;border-bottom:1px solid var(--line);}
+  .filter-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .filter-block h4{font-size:14.5px;font-weight:700;margin-bottom:16px;}
+  .filter-block label{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink-soft);padding:6px 0;cursor:pointer;transition:color .2s;}
+  .filter-block label:hover{color:var(--ink);}
+  .filter-block label span.n{margin-right:auto;font-size:11.5px;opacity:0.7;}
+
+  .price-range{padding-top:4px;}
+  .price-range input[type="range"]{width:100%;accent-color:var(--blue);margin-bottom:10px;}
+  .price-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-soft);}
+
+  .rating-opt{display:flex;align-items:center;gap:8px;}
+  .rating-opt .stars{color:#F2C94C;font-size:12px;letter-spacing:1px;}
+
+  .clear-filters{width:100%;padding:12px;border-radius:12px;border:1px solid var(--glass-border);font-size:13px;font-weight:600;color:var(--ink-soft);transition:border-color .25s ease,color .25s ease;}
+  .clear-filters:hover{border-color:rgba(255,255,255,0.28);color:var(--ink);}
+
+  /* active filter chips */
+  .active-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+  .chip-x{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;padding:7px 8px 7px 14px;border-radius:100px;background:var(--glass);border:1px solid var(--glass-border);}
+  .chip-x button{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:11px;}
+
+  /* product grid (reuse card language) */
+  .prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .prod-card{border-radius:20px;border:1px solid var(--glass-border);background:var(--glass);overflow:hidden;transition:border-color .3s ease;}
+  .prod-card:hover{border-color:rgba(255,255,255,0.24);}
+  .prod-media{position:relative;aspect-ratio:1/1;overflow:hidden;}
+  .prod-media .ph{position:absolute;inset:0;transition:transform .5s ease;}
+  .prod-card:hover .prod-media .ph{transform:scale(1.06);}
+  .prod-badge{position:absolute;top:12px;right:12px;font-size:11px;font-weight:700;padding:6px 12px;border-radius:100px;background:rgba(255,255,255,0.55);backdrop-filter:blur(6px);border:1px solid var(--glass-border);z-index:2;}
+  .prod-badge.sale{color:var(--teal);}
+  .wish-btn{position:absolute;top:12px;left:12px;width:34px;height:34px;border-radius:50%;z-index:2;background:rgba(255,255,255,0.55);backdrop-filter:blur(6px);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;color:var(--ink);transition:background .25s ease,color .25s ease;}
+  .wish-btn:hover{background:rgba(255,255,255,0.15);}
+  .wish-btn.active{color:#FF6B81;}
+  .quick-add{position:absolute;left:12px;right:12px;bottom:12px;z-index:2;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;border-radius:12px;font-size:13px;font-weight:700;color:#08080A;background:linear-gradient(100deg,var(--teal),var(--blue));opacity:0;transform:translateY(10px);transition:opacity .3s ease,transform .3s ease;}
+  .prod-card:hover .quick-add{opacity:1;transform:translateY(0);}
+  .prod-body{padding:16px 16px 18px; background-color: #eff3fc;}
+  .prod-cat{font-size:11px;color:var(--ink-soft);font-weight:600;margin-bottom:5px;display:block;}
+  .prod-body h3{font-size:14.5px;font-weight:700;margin-bottom:9px;line-height:1.4;}
+  .prod-rating{display:flex;align-items:center;gap:6px;margin-bottom:11px;}
+  .prod-rating .stars{color:#F2C94C;font-size:11.5px;letter-spacing:1px;}
+  .prod-rating span{font-size:11px;color:var(--ink-soft);}
+  .prod-price{display:flex;align-items:baseline;gap:9px;}
+  .prod-price strong{font-size:15.5px;font-weight:800;}
+  .prod-price del{font-size:12px;color:var(--ink-soft);opacity:0.6;}
+
+  /* pagination */
+  .pagination{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:56px;}
+  .page-btn{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:600;color:var(--ink-soft);border:1px solid var(--glass-border);background:var(--glass);transition:all .2s ease;}
+  .page-btn:hover{color:var(--ink);border-color:rgba(255,255,255,0.24);}
+  .page-btn.active{color:#08080A;background:linear-gradient(100deg,var(--teal),var(--blue));border-color:transparent;}
+  .page-btn.nav-arrow svg{width:15px;height:15px;}
+
+  /* mobile filter drawer */
+  .mobile-filter-bar{display:none;}
+  .filter-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:150;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+  .filter-overlay.open{opacity:1;pointer-events:auto;}
+  .filter-drawer{
+    position:fixed;top:0;right:0;bottom:0;width:86%;max-width:340px;background:var(--bg-soft);
+    z-index:151;padding:24px;overflow-y:auto;transform:translateX(100%);transition:transform .35s ease;
+  }
+  .filter-drawer.open{transform:translateX(0);}
+  .drawer-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+  .drawer-head h3{font-size:17px;font-weight:800;}
+  .drawer-close{width:36px;height:36px;border-radius:50%;background:var(--glass);display:flex;align-items:center;justify-content:center;}
+
+  @media(max-width:1024px){
+    .listing-layout{grid-template-columns:1fr;}
+    .filters{display:none;}
+    .mobile-filter-bar{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+    .mobile-filter-btn{display:flex;align-items:center;gap:8px;padding:11px 20px;border-radius:100px;border:1px solid var(--glass-border);background:var(--glass);font-size:13.5px;font-weight:600;}
+    .prod-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media(max-width:768px){
+    nav,.nav-actions .cta-btn{display:none;}
+    .burger{display:flex;}
+    .nav-wrap{padding:16px 20px;}
+    .page-wrap{padding:24px 20px 70px;}
+    .page-head{flex-direction:column;align-items:flex-start;}
+  }
+  @media(max-width:520px){
+    .prod-grid{grid-template-columns:1fr 1fr;gap:12px;}
+    .prod-body{padding:12px 12px 14px; background-color: #eff3fc;}
+    .prod-body h3{font-size:13px;}
+  }
+  .search-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:90px 20px;}
+  .search-overlay.show{display:flex;}
+  .search-box{width:100%;max-width:560px;background:var(--bg-soft);border:1px solid var(--glass-border);border-radius:20px;padding:8px 8px 8px 18px;display:flex;align-items:center;gap:12px;color:var(--ink-soft);}
+  .search-box input{flex:1;background:none;border:none;outline:none;color:var(--ink);font-family:inherit;font-size:15px;padding:12px 4px;}
+  .search-box button.search-close{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);flex-shrink:0;transition:background .2s ease;}
+  .search-box button.search-close:hover{background:rgba(255,255,255,0.08);}
+
+  :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:8px;}
+</style>
+</head>
+<body>
+
+<div class="orb-field"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+
+<header>
+  <div class="nav-wrap">
+    <a href="index.html" class="logo"><span class="logo-dot"></span><span class="logo-text"><span class="logo-main">ZOROUFE</span><span class="logo-sub">LUXE</span></span></a>
+    <nav><ul>
+      <li><a href="index.html">خانه</a></li>
+      <li><a href="#" class="active">دسته‌بندی‌ها</a></li>
+      <li><a href="04-product-listing.html">برندها</a></li>
+      <li><a href="04-product-listing.html?discount=1">تخفیف‌ها</a></li>
+      <li><a href="#">تماس</a></li>
+    </ul></nav>
+    <div class="nav-actions">
+      <button type="button" class="icon-btn" id="searchBtn" aria-label="جستجو"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      <a href="16-wishlist.html" class="icon-btn" aria-label="علاقه‌مندی‌های من"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.6-10-9.2C.5 8 2 4.5 5.6 4c2.2-.3 4 .9 6.4 3.4C14.4 4.9 16.2 3.7 18.4 4c3.6.5 5.1 4 3.6 7.8-2.5 4.6-10 9.2-10 9.2z"/></svg></a>
+        <a href="15-login.html" id="accountBtn" class="icon-btn" aria-label="حساب کاربری"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+        <a href="06-cart.html" class="icon-btn" aria-label="سبد خرید"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg><span class="cart-count">3</span></a>
+      <button class="burger" id="burgerBtn"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-panel" id="mobilePanel">
+    <ul>
+      <li><a href="index.html">خانه</a></li><li><a href="#">دسته‌بندی‌ها</a></li><li><a href="04-product-listing.html">برندها</a></li><li><a href="04-product-listing.html?discount=1">تخفیف‌ها</a></li><li><a href="#">تماس</a></li>
+    </ul>
+  </div>
+</header>
+
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    <input type="text" id="searchInput" placeholder="دنبال چی می‌گردی؟">
+    <button class="search-close" id="searchClose" aria-label="بستن جستجو">✕</button>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div class="breadcrumb">
+    <a href="index.html">خانه</a><span class="sep">/</span><a href="#">دسته‌بندی‌ها</a><span class="sep">/</span><span  id="crumbCurrent">ظروف و آشپزخانه</span>
+  </div>
+
+  <div class="page-head">
+    <div>
+      <h1 id="pageTitle">ظروف و آشپزخانه</h1>
+      <span class="count" id="pageCount">۴۲۶ محصول پیدا شد</span>
+    </div>
+    <div class="sort-select">
+      <select id="sortSelect">
+        <option>مرتب‌سازی: پیشنهادی</option>
+        <option>ارزان‌ترین</option>
+        <option>گران‌ترین</option>
+        <option>پرفروش‌ترین</option>
+        <option>جدیدترین</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="mobile-filter-bar">
+    <button class="mobile-filter-btn" id="openFilters">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+      فیلترها
+    </button>
+  </div>
+
+  <div class="listing-layout">
+    <aside class="filters">
+      <div class="active-chips">
+        <span class="chip-x" id="activeCatChip">ظروف و آشپزخانه <button>✕</button></span>
+      </div>
+
+      <div class="filter-block">
+        <h4>دسته‌بندی</h4>
+        <div id="subcatList">
+        <label><input type="checkbox" checked> ظروف چینی و سرامیک <span class="n">۱۸۰</span></label>
+        <label><input type="checkbox"> ظروف پیرکس و شیشه‌ای <span class="n">۹۶</span></label>
+        <label><input type="checkbox"> قابلمه و ماهیتابه <span class="n">۷۴</span></label>
+        <label><input type="checkbox"> کارد و چنگال <span class="n">۵۲</span></label>
+        <label><input type="checkbox"> لیوان و فنجان <span class="n">۱۲۴</span></label>
+        </div>
+      </div>
+
+      <div class="filter-block">
+        <h4>محدوده قیمت</h4>
+        <div class="price-range">
+          <input type="range" min="0" max="10000000" value="2000000" id="priceRange">
+          <div class="price-labels"><span>۰ ت</span><span id="priceVal">۲٬۰۰۰٬۰۰۰ ت</span></div>
+        </div>
+      </div>
+
+      <div class="filter-block">
+        <h4>برند</h4>
+        <div id="brandList">
+          <p style="font-size:12px;color:var(--ink-soft);">در حال بارگذاری...</p>
+        </div>
+      </div>
+
+     <div class="filter-block" id="ratingBlock">
+        <h4>امتیاز</h4>
+        <label class="rating-opt"><input type="checkbox" data-rating="5"> <span class="stars">★★★★★</span> و بالاتر</label>
+        <label class="rating-opt"><input type="checkbox" data-rating="4"> <span class="stars">★★★★☆</span> و بالاتر</label>
+        <label class="rating-opt"><input type="checkbox" data-rating="3"> <span class="stars">★★★☆☆</span> و بالاتر</label>
+      </div>
+
+      <button class="clear-filters">پاک کردن فیلترها</button>
+    </aside>
+
+    <div class="listing-main">
+      <div class="prod-grid" id="prodGrid">
+        <!-- cards injected by JS -->
+      </div>
+
+      <div class="pagination">
+        <button class="page-btn nav-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+        <button class="page-btn active">۱</button>
+        <button class="page-btn">۲</button>
+        <button class="page-btn">۳</button>
+        <button class="page-btn">…</button>
+        <button class="page-btn">۱۸</button>
+        <button class="page-btn nav-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="filter-overlay" id="filterOverlay"></div>
+<div class="filter-drawer" id="filterDrawer">
+  <div class="drawer-head">
+    <h3>فیلترها</h3>
+    <button class="drawer-close" id="closeFilters">✕</button>
+  </div>
+  <div class="filter-block">
+    <h4>دسته‌بندی</h4>
+    <label><input type="checkbox" checked> ظروف چینی و سرامیک</label>
+    <label><input type="checkbox"> ظروف پیرکس و شیشه‌ای</label>
+    <label><input type="checkbox"> قابلمه و ماهیتابه</label>
+    <label><input type="checkbox"> کارد و چنگال</label>
+  </div>
+  <div class="filter-block">
+    <h4>محدوده قیمت</h4>
+    <div class="price-range">
+      <input type="range" min="0" max="10000000" value="2000000">
+      <div class="price-labels"><span>۰ ت</span><span>۲٬۰۰۰٬۰۰۰ ت</span></div>
+    </div>
+  </div>
+  <button class="clear-filters">پاک کردن فیلترها</button>
+</div>
+
+<script src="api.js"></script>
+<script>
+  // mobile nav menu
+  document.getElementById('burgerBtn').addEventListener('click', () => {
+    document.getElementById('mobilePanel').classList.toggle('open');
+  });
+
+  // mobile filter drawer
+  const overlay = document.getElementById('filterOverlay');
+  const drawer = document.getElementById('filterDrawer');
+  document.getElementById('openFilters').addEventListener('click', () => {
+    overlay.classList.add('open'); drawer.classList.add('open');
+  });
+  function closeDrawer(){ overlay.classList.remove('open'); drawer.classList.remove('open'); }
+  document.getElementById('closeFilters').addEventListener('click', closeDrawer);
+  overlay.addEventListener('click', closeDrawer);
+
+
+
+ // ---------------- داده واقعی از API ----------------
+  const urlParams = new URLSearchParams(window.location.search);
+  const searchQuery = urlParams.get('search');
+  const currentCat = urlParams.get('cat') || 'kitchen';
+  const discountFlag = urlParams.get('discount') === '1';
+  const grid = document.getElementById('prodGrid');
+
+  let currentSort = '';
+  let categoriesCache = [];
+  let currentSubcats = [];
+  let currentBrands = [];
+  let currentMinRating = null;
+  let currentMaxPrice = null;
+  let currentPage = 1;
+  let totalPages = 1;
+  function renderProducts(products) {
+    if (products.length === 0) {
+      grid.innerHTML = `<p style="grid-column:1/-1;color:var(--ink-soft);text-align:center;padding:60px 0;">محصولی با این عبارت پیدا نشد.</p>`;
+      return;
+    }
+    grid.innerHTML = products.map(p => `
+      <a href="05-product-detail.html?id=${encodeURIComponent(p.id)}" class="prod-card" style="display:block;">
+        <div class="prod-media">
+          <div class="ph" style="${p.images && p.images.length ? `background-image:url('${p.images[0]}');background-size:cover;background-position:center;` : `background:linear-gradient(${gradFor(p.id)});`}"></div>
+          ${p.oldPrice ? `<span class="prod-badge sale">٪${Math.round((1 - p.price / p.oldPrice) * 100)} تخفیف</span>` : ''}
+          <button class="wish-btn" data-id="${p.id}" aria-label="افزودن به علاقه‌مندی‌ها" onclick="event.preventDefault()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.6-10-9.2C.5 8 2 4.5 5.6 4c2.2-.3 4 .9 6.4 3.4C14.4 4.9 16.2 3.7 18.4 4c3.6.5 5.1 4 3.6 7.8-2.5 4.6-10 9.2-10 9.2z"/></svg></button>
+          <div class="quick-add" data-product-id="${p.id}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg> افزودن به سبد</div>
+        </div>
+        <div class="prod-body">
+          <span class="prod-cat">${p.subcategory}</span>
+          <h3>${p.name}</h3>
+          <div class="prod-rating"><span class="stars">${'★'.repeat(Math.round(p.rating))}${'☆'.repeat(5 - Math.round(p.rating))}</span><span>(${toFa(p.reviewCount)})</span></div>
+          <div class="prod-price"><strong>${fmtPrice(p.price)}</strong>${p.oldPrice ? `<del>${fmtPrice(p.oldPrice)}</del>` : ''}</div>
+        </div>
+      </a>
+    `).join('');
+  }
+  function renderPagination() {
+    const pagWrap = document.querySelector('.pagination');
+    if (!pagWrap) return;
+    if (totalPages <= 1) { pagWrap.innerHTML = ''; return; }
+
+    let html = `<button class="page-btn nav-arrow" id="prevPageBtn" ${currentPage === 1 ? 'disabled' : ''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>`;
+
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+        html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${toFa(i)}</button>`;
+      } else if (i === currentPage - 2 || i === currentPage + 2) {
+        html += `<button class="page-btn" style="pointer-events:none;">…</button>`;
+      }
+    }
+
+    html += `<button class="page-btn nav-arrow" id="nextPageBtn" ${currentPage === totalPages ? 'disabled' : ''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>`;
+
+    pagWrap.innerHTML = html;
+
+    pagWrap.querySelectorAll('.page-btn[data-page]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentPage = Number(btn.dataset.page);
+        
+        loadAndRender();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+    const prevBtn = document.getElementById('prevPageBtn');
+    const nextBtn = document.getElementById('nextPageBtn');
+    if (prevBtn && currentPage > 1) prevBtn.addEventListener('click', () => { currentPage--; loadAndRender(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    if (nextBtn && currentPage < totalPages) nextBtn.addEventListener('click', () => { currentPage++; loadAndRender(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  }
+ async function loadBrandFilters() {
+    try {
+      const baseParams = discountFlag ? { discount: '1' } : (searchQuery ? { search: searchQuery } : { cat: currentCat });
+      const { products: allProducts } = await getProducts(baseParams);
+      const brandCounts = {};
+      allProducts.forEach(p => { if (p.brand) brandCounts[p.brand] = (brandCounts[p.brand] || 0) + 1; });
+      const brandList = document.getElementById('brandList');
+      const brands = Object.keys(brandCounts);
+      if (brands.length === 0) {
+        brandList.innerHTML = `<p style="font-size:12px;color:var(--ink-soft);">برندی برای این بخش ثبت نشده.</p>`;
+        return;
+      }
+      brandList.innerHTML = brands.map(b => `
+        <label><input type="checkbox" data-brand="${b}"> ${b} <span class="n">${toFa(brandCounts[b])}</span></label>
+      `).join('');
+    } catch (err) { /* بی‌سروصدا رد شو */ }
+  }
+
+  async function loadAndRender() {
+    grid.innerHTML = `<p style="grid-column:1/-1;color:var(--ink-soft);text-align:center;padding:60px 0;">در حال بارگذاری...</p>`;
+    try {
+      const sortMap = { 'ارزان‌ترین': 'cheap', 'گران‌ترین': 'expensive', 'پرفروش‌ترین': 'bestselling' };
+      const params = { sort: sortMap[currentSort] || undefined };
+           params.page = currentPage;
+      params.limit = 24;
+      if (currentSubcats.length > 0) params.subcategory = currentSubcats.join(',');
+      if (currentBrands.length > 0) params.brand = currentBrands.join(',');
+      if (currentMinRating) params.minRating = currentMinRating;
+      if (currentMaxPrice) params.maxPrice = currentMaxPrice;
+
+      let title, count;
+      if (discountFlag) {
+        params.discount = '1';
+        title = 'تخفیف‌ها';
+        document.getElementById('subcatList').closest('.filter-block').style.display = 'none';
+      } else if (searchQuery) {
+        params.search = searchQuery;
+        title = `نتایج جستجو برای «${searchQuery}»`;
+        document.getElementById('subcatList').closest('.filter-block').style.display = 'none';
+      } else {
+        params.cat = currentCat;
+        const cat = categoriesCache.find(c => c.slug === currentCat);
+        title = cat ? cat.name : currentCat;
+        if (cat) {
+          document.getElementById('subcatList').innerHTML = cat.subcategories.map(s => `
+            <label><input type="checkbox" data-subcat="${s}" checked> ${s}</label>
+          `).join('');
+        }
+      }
+
+            const { products, count: c, totalPages: tp } = await getProducts(params);
+      count = c;
+      totalPages = tp || 1;
+      renderPagination();
+
+      document.getElementById('pageTitle').textContent = title;
+      document.getElementById('crumbCurrent').textContent = title;
+      document.getElementById('pageCount').textContent = `${toFa(count)} محصول پیدا شد`;
+      document.getElementById('activeCatChip').innerHTML = `${title} <button>✕</button>`;
+
+      renderProducts(products);
+    } catch (err) {
+      grid.innerHTML = `<p style="grid-column:1/-1;color:var(--ink-soft);text-align:center;padding:60px 0;">
+        اتصال به سرور برقرار نشد. مطمئن شو بک‌اند روی <code>${API_BASE}</code> در حال اجراست.
+      </p>`;
+      console.error(err);
+    }
+  }
+
+  
+getCategories().then(cats => { categoriesCache = cats; loadAndRender(); }).finally(() => loadBrandFilters());
+
+  // ---------------- وصل کردن فیلترها ----------------
+  // چک‌باکس‌های دسته‌بندی (چون دوباره ساخته می‌شن، از event delegation استفاده می‌کنیم)
+  document.getElementById('subcatList').addEventListener('change', (e) => {
+    if (e.target.tagName !== 'INPUT') return;
+    currentSubcats = Array.from(document.querySelectorAll('#subcatList input[data-subcat]:checked')).map(el => el.dataset.subcat);
+        currentPage = 1;
+    loadAndRender();
+  });
+
+  // چک‌باکس‌های برند
+  document.getElementById('brandList').addEventListener('change', (e) => {
+    if (e.target.tagName !== 'INPUT') return;
+    
+  currentBrands = Array.from(document.querySelectorAll('#brandList input[data-brand]:checked')).map(el => el.dataset.brand);
+        currentPage = 1;
+  loadAndRender();
+  });
+
+  // چک‌باکس‌های امتیاز - فقط یکی همزمان قابل انتخابه
+  document.getElementById('ratingBlock').addEventListener('change', (e) => {
+    if (e.target.tagName !== 'INPUT') return;
+    const ratingInputs = document.querySelectorAll('#ratingBlock input[data-rating]');
+    if (e.target.checked) {
+      ratingInputs.forEach(el => { if (el !== e.target) el.checked = false; });
+      currentMinRating = e.target.dataset.rating;
+    } else {
+      currentMinRating = null;
+    }
+        currentPage = 1;
+    loadAndRender();
+  });
+
+  // اسلایدر قیمت - موقع رها کردن اسلایدر فیلتر اعمال می‌شه
+  const priceRange = document.getElementById('priceRange');
+  const priceVal = document.getElementById('priceVal');
+  priceRange.addEventListener('input', () => {
+    priceVal.textContent = Number(priceRange.value).toLocaleString('fa-IR') + ' ت';
+  });
+  priceRange.addEventListener('change', () => {
+    currentMaxPrice = priceRange.value;
+        currentPage = 1;
+    loadAndRender();
+  });
+
+  // دکمه‌ی پاک کردن همه‌ی فیلترها
+  document.querySelector('.clear-filters').addEventListener('click', () => {
+    currentSubcats = [];
+    currentBrands = [];
+    currentMinRating = null;
+    currentMaxPrice = null;
+    priceRange.value = priceRange.max;
+    priceVal.textContent = Number(priceRange.max).toLocaleString('fa-IR') + ' ت';
+    document.querySelectorAll('#subcatList input[type="checkbox"]').forEach(el => el.checked = true);
+    document.querySelectorAll('#brandList input[type="checkbox"]').forEach(el => el.checked = false);
+    document.querySelectorAll('#ratingBlock input[type="checkbox"]').forEach(el => el.checked = false);
+        currentPage = 1;
+    loadAndRender();
+  });
+  // sort select wiring (real query param now)
+  document.getElementById('sortSelect').addEventListener('change', (e) => {
+    currentSort = e.target.value;
+        currentPage = 1;
+    loadAndRender();
+  });
+
+  // add-to-cart from listing cards + wishlist toggle (delegated)
+  document.body.addEventListener('click', async (e) => {
+   const wishBtn = e.target.closest('.wish-btn');
+    if (wishBtn) {
+      if (!isLoggedIn()) { window.location.href = '15-login.html'; return; }
+      const productId = wishBtn.dataset.id;
+      try {
+        if (wishBtn.classList.contains('active')) {
+          await removeFromWishlist(productId);
+          wishBtn.classList.remove('active');
+        } else {
+          await addToWishlist(productId);
+          wishBtn.classList.add('active');
+        }
+      } catch (err) { alert(err.message || 'خطا در بروزرسانی علاقه‌مندی‌ها'); }
+      return;
+    }
+
+    const addBtn = e.target.closest('.quick-add');
+    if (addBtn) {
+      e.preventDefault();
+      const productId = addBtn.dataset.productId;
+      const original = addBtn.innerHTML;
+      try {
+        await addToCart(productId, 1);
+        addBtn.textContent = 'اضافه شد ✓';
+        refreshCartBadge();
+        setTimeout(() => { addBtn.innerHTML = original; }, 1500);
+      } catch (err) {
+        addBtn.textContent = 'خطا در افزودن';
+        setTimeout(() => { addBtn.innerHTML = original; }, 1500);
+      }
+    }
+  });
+  // search overlay
+  const searchBtn = document.getElementById('searchBtn');
+  const searchOverlay = document.getElementById('searchOverlay');
+  const searchInput = document.getElementById('searchInput');
+  const searchClose = document.getElementById('searchClose');
+  searchBtn.addEventListener('click', () => {
+    searchOverlay.classList.add('show');
+    searchInput.focus();
+  });
+  searchClose.addEventListener('click', () => searchOverlay.classList.remove('show'));
+  searchOverlay.addEventListener('click', (e) => { if (e.target === searchOverlay) searchOverlay.classList.remove('show'); });
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && searchInput.value.trim()){
+      window.location.href = '04-product-listing.html?search=' + encodeURIComponent(searchInput.value.trim());
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>علاقه‌مندی‌های من | ZOROUFE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F6FB; --bg-soft:#FFFFFF; --ink:#2B2A33; --ink-soft:#6B6875;
+    --violet:#8B6CF2; --blue:#4E9CFF; --teal:#3EE0C4;
+    --glass:rgba(0,0,0,0.04); --glass-border:rgba(0,0,0,0.1);
+    --line:rgba(0,0,0,0.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;position:relative;}
+  a{text-decoration:none;color:inherit;} ul{list-style:none;} button{font-family:inherit;border:none;background:none;cursor:pointer;}
+
+  .orb-field{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+  .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.35;}
+  .orb-1{width:440px;height:440px;background:radial-gradient(circle,var(--violet),transparent 70%);top:-12%;right:-10%;}
+  .orb-2{width:380px;height:380px;background:radial-gradient(circle,var(--blue),transparent 70%);bottom:-12%;left:-10%;}
+
+  header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.78);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);}
+  .nav-wrap{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;}
+  .logo{font-size:20px;font-weight:800;display:flex;align-items:center;gap:9px;}
+  .logo-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--blue));box-shadow:0 0 14px var(--violet);}
+  .logo-text{display:flex;flex-direction:column;line-height:1;gap:3px;}
+  .logo-main{font-size:19px;font-weight:800;letter-spacing:-0.01em;}
+  .logo-sub{font-size:9px;font-weight:600;letter-spacing:0.32em;color:var(--ink-soft);}
+  .back-link{font-size:13.5px;color:var(--ink-soft);}
+  .back-link:hover{color:var(--ink);}
+
+  .page-wrap{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:56px 40px 100px;}
+  .breadcrumb{font-size:13px;color:var(--ink-soft);margin-bottom:20px;}
+  .page-title{font-size:clamp(28px,4vw,38px);font-weight:800;letter-spacing:-0.02em;margin-bottom:36px;}
+
+  .wish-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+  .wish-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:18px;overflow:hidden;transition:border-color .25s;}
+  .wish-card:hover{border-color:rgba(255,255,255,0.24);}
+  .wish-media{position:relative;height:190px;}
+  .wish-media .ph{width:100%;height:100%;}
+  .remove-wish-btn{position:absolute;top:10px;left:10px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;color:#FF6B81;}
+  .wish-body{padding:16px 18px;}
+  .wish-cat{font-size:11px;color:var(--ink-soft);font-weight:600;}
+  .wish-body h3{font-size:14.5px;font-weight:700;margin:4px 0 10px;}
+  .wish-price strong{font-size:15.5px;font-weight:800;}
+  .wish-price del{font-size:12px;color:var(--ink-soft);margin-right:6px;}
+
+  .empty-state{text-align:center;padding:80px 20px;color:var(--ink-soft);}
+  .empty-state a{color:var(--blue);}
+  .loading-state{text-align:center;padding:80px 20px;color:var(--ink-soft);}
+  .login-needed{text-align:center;padding:80px 20px;color:var(--ink-soft);}
+  .login-needed a{display:inline-block;margin-top:16px;padding:12px 28px;border-radius:100px;background:linear-gradient(100deg,var(--teal),var(--blue));color:#08080A;font-weight:800;font-size:13.5px;}
+
+  @media(max-width:900px){ .wish-grid{grid-template-columns:1fr 1fr;} }
+  @media(max-width:600px){ .wish-grid{grid-template-columns:1fr;} .page-wrap{padding:36px 20px 70px;} }
+</style>
+</head>
+<body>
+
+<div class="orb-field"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+
+<header>
+  <div class="nav-wrap">
+    <a href="index.html" class="logo"><span class="logo-dot"></span><span class="logo-text"><span class="logo-main">ZOROUFE</span><span class="logo-sub">LUXE</span></span></a>
+    <a href="index.html" class="back-link">← بازگشت به فروشگاه</a>
+  </div>
+</header>
+
+<div class="page-wrap">
+  <div class="breadcrumb"><a href="index.html">خانه</a> / علاقه‌مندی‌های من</div>
+  <h1 class="page-title">علاقه‌مندی‌های من</h1>
+  <div id="wishWrap"><p class="loading-state">در حال بارگذاری...</p></div>
+</div>
+
+<script src="api.js"></script>
+<script>
+  const categoryNamesFa = { kitchen:'ظروف و آشپزخانه', decor:'دکوراسیون', lighting:'نور و روشنایی', cleaning:'نظافت خانه' };
+  const fmtFa = n => Math.round(n).toLocaleString('fa-IR') + ' ت';
+  const wrap = document.getElementById('wishWrap');
+
+  async function loadWishlist(){
+    if (!isLoggedIn()) {
+      wrap.innerHTML = `
+        <div class="login-needed">
+          <p>برای دیدن علاقه‌مندی‌هات، اول باید وارد حسابت بشی.</p>
+          <a href="15-login.html">ورود به حساب</a>
+        </div>`;
+      return;
+    }
+
+    try {
+      const { productIds } = await getWishlist();
+      if (productIds.length === 0) {
+        wrap.innerHTML = `<div class="empty-state">هنوز چیزی به علاقه‌مندی‌هات اضافه نکردی. <a href="04-product-listing.html">برو محصولات رو ببین</a></div>`;
+        return;
+      }
+
+      const { products: allProducts } = await getProducts({});
+      const wishProducts = allProducts.filter(p => productIds.includes(p.id));
+
+      wrap.innerHTML = `<div class="wish-grid">${wishProducts.map(p => `
+        <div class="wish-card" data-id="${p.id}">
+          <div class="wish-media">
+            <a href="05-product-detail.html?id=${p.id}">
+              <div class="ph" style="${p.images && p.images.length ? `background-image:url('${p.images[0]}');background-size:cover;background-position:center;` : `background:linear-gradient(${gradFor(p.id)});`}"></div>
+            </a>
+            <button class="remove-wish-btn" data-id="${p.id}" aria-label="حذف از علاقه‌مندی‌ها">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.2C.5 8 2 4.5 5.6 4c2.2-.3 4 .9 6.4 3.4C14.4 4.9 16.2 3.7 18.4 4c3.6.5 5.1 4 3.6 7.8-2.5 4.6-10 9.2-10 9.2z"/></svg>
+            </button>
+          </div>
+          <div class="wish-body">
+            <span class="wish-cat">${categoryNamesFa[p.category] || p.category}</span>
+            <h3><a href="05-product-detail.html?id=${p.id}">${p.name}</a></h3>
+            <div class="wish-price"><strong>${fmtFa(p.price)}</strong>${p.oldPrice ? `<del>${fmtFa(p.oldPrice)}</del>` : ''}</div>
+          </div>
+        </div>
+      `).join('')}</div>`;
+
+      document.querySelectorAll('.remove-wish-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.dataset.id;
+          try {
+            await removeFromWishlist(id);
+            btn.closest('.wish-card').remove();
+            if (document.querySelectorAll('.wish-card').length === 0) loadWishlist();
+          } catch (err) { alert(err.message || 'حذف با خطا مواجه شد'); }
+        });
+      });
+    } catch (err) {
+      wrap.innerHTML = `<p class="loading-state">اتصال به سرور برقرار نشد.</p>`;
+    }
+  }
+
+  loadWishlist();
+</script>
+</body>
+</html>

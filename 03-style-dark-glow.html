@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZOROUFE | فروشگاه لوازم خانه</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F6FB; --bg-soft:#FFFFFF; --ink:#2B2A33; --ink-soft:#6B6875;
+    --violet:#8B6CF2; --blue:#4E9CFF; --teal:#3EE0C4;
+    --glass:rgba(0,0,0,0.04); --glass-border:rgba(0,0,0,0.1);
+    --line:rgba(0,0,0,0.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--ink);
+    overflow-x:hidden; position:relative;
+  }
+  a{text-decoration:none;color:inherit;} ul{list-style:none;} button{font-family:inherit;border:none;background:none;cursor:pointer;}
+
+  /* ---------- background orbs ---------- */
+  .orb-field{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+  .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.55;}
+  .orb-1{width:520px;height:520px;background:radial-gradient(circle,var(--violet),transparent 70%);top:-10%;right:-8%;animation:drift1 22s ease-in-out infinite;}
+  .orb-2{width:460px;height:460px;background:radial-gradient(circle,var(--blue),transparent 70%);bottom:-15%;left:-10%;animation:drift2 26s ease-in-out infinite;}
+  .orb-3{width:360px;height:360px;background:radial-gradient(circle,var(--teal),transparent 70%);top:35%;left:38%;animation:drift3 20s ease-in-out infinite;opacity:0.35;}
+  @keyframes drift1{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-60px,50px) scale(1.1);}}
+  @keyframes drift2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(50px,-40px) scale(1.06);}}
+  @keyframes drift3{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(30px,30px) scale(0.9);}}
+  @media(prefers-reduced-motion:reduce){.orb{animation:none !important;}}
+
+  /* ---------- header ---------- */
+  header{position:fixed;top:0;left:0;right:0;z-index:100;transition:background .3s ease, border-color .3s ease, backdrop-filter .3s ease;border-bottom:1px solid transparent;}
+  header.scrolled{background:rgba(255,255,255,0.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom-color:var(--line);}
+  .nav-wrap{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:20px 40px;}
+  .logo{font-size:20px;font-weight:800;letter-spacing:-0.01em;display:flex;align-items:center;gap:9px;}
+  .logo-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--blue));box-shadow:0 0 14px var(--violet);}
+  .logo-text{display:flex;flex-direction:column;line-height:1;gap:3px;}
+  .logo-main{font-size:19px;font-weight:800;letter-spacing:-0.01em;}
+  .logo-sub{font-size:9px;font-weight:600;letter-spacing:0.32em;color:var(--ink-soft);}
+  nav ul{display:flex;gap:34px;font-size:14.5px;font-weight:500;color:var(--ink-soft);}
+  nav ul li a{position:relative;padding:6px 0;transition:color .25s;}
+  nav ul li a::after{content:"";position:absolute;right:0;bottom:0;width:0;height:1px;background:linear-gradient(90deg,var(--violet),var(--blue));transition:width .3s;}
+  nav ul li a:hover{color:var(--ink);}
+  nav ul li a:hover::after{width:100%;}
+  .nav-actions{display:flex;align-items:center;gap:14px;}
+  .icon-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink);position:relative;transition:background .2s;}
+  .icon-btn:hover{background:var(--glass);}
+  .cart-count{position:absolute;top:0;left:0;background:var(--blue);color:#08080A;font-size:9px;font-weight:800;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .cta-btn{position:relative;padding:11px 26px;border-radius:100px;font-size:13.5px;font-weight:700;color:var(--ink);background:var(--bg-soft);border:1px solid var(--glass-border);overflow:hidden;transition:transform .25s ease;white-space:nowrap;}
+  .cta-btn::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,var(--violet),var(--blue),var(--teal));opacity:0;transition:opacity .3s ease;z-index:-1;}
+  .cta-btn:hover{transform:translateY(-2px);}
+  .cta-btn:hover::before{opacity:1;}
+  .burger{display:none;width:38px;height:38px;align-items:center;justify-content:center;flex-direction:column;gap:5px;}
+  .burger span{width:20px;height:1.5px;background:var(--ink);border-radius:2px;}
+  .mobile-panel{position:fixed;top:76px;left:0;right:0;max-height:0;overflow:hidden;transition:max-height .4s ease;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);z-index:99;}
+  .mobile-panel.open{max-height:320px;border-bottom:1px solid var(--line);}
+  .mobile-panel ul{display:flex;flex-direction:column;padding:20px 32px;gap:22px;font-size:16px;font-weight:600;}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:190px 40px 80px;text-align:center;display:flex;flex-direction:column;align-items:center;}
+
+  .hero-eyebrow{
+    display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:600;
+    padding:9px 20px;border-radius:100px;border:1px solid var(--glass-border);background:var(--glass);
+    color:var(--ink-soft); margin-bottom:32px;
+    opacity:0; animation:fadeUp .8s ease forwards;
+  }
+  .hero-eyebrow .pulse{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 10px var(--teal);animation:pulse 2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+  .hero h1{
+    font-size:clamp(42px,7vw,86px);font-weight:800;line-height:1.08;letter-spacing:-0.03em;
+    max-width:920px; margin-bottom:28px;
+  }
+  .hero h1 .line{display:block;opacity:0;transform:translateY(30px);animation:fadeUp .9s ease forwards;}
+  .hero h1 .line:nth-child(1){animation-delay:.1s;}
+  .hero h1 .line:nth-child(2){animation-delay:.25s;}
+  .hero h1 .grad{
+    background:linear-gradient(100deg,var(--violet),var(--blue) 50%,var(--teal));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  .hero p{
+    font-size:18px;font-weight:400;line-height:1.85;color:var(--ink-soft);max-width:560px;margin-bottom:44px;
+    opacity:0; animation:fadeUp .9s ease forwards; animation-delay:.4s;
+  }
+
+  .hero-actions{
+    display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center;margin-bottom:80px;
+    opacity:0; animation:fadeUp .9s ease forwards; animation-delay:.55s;
+  }
+
+  .btn-primary{
+    position:relative;padding:17px 38px;border-radius:100px;font-size:15px;font-weight:700;color:#08080A;
+    background:linear-gradient(100deg,var(--teal),var(--blue),var(--violet));
+    background-size:200% 100%;
+    box-shadow:0 0 40px -8px rgba(78,156,255,0.55);
+    transition:transform .3s ease, background-position .6s ease, box-shadow .3s ease;
+  }
+  .btn-primary:hover{transform:translateY(-2px);background-position:100% 0;box-shadow:0 0 55px -6px rgba(139,108,242,0.65);}
+
+  .btn-ghost{
+    padding:17px 34px;border-radius:100px;font-size:15px;font-weight:600;color:var(--ink);
+    border:1px solid var(--glass-border);background:var(--glass);
+    transition:background .3s ease, border-color .3s ease;
+  }
+  .btn-ghost:hover{background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.22);}
+
+  @keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
+
+  /* ---------- glass product cards ---------- */
+  .card-stage{
+    position:relative; width:100%; max-width:960px; height:340px;
+    opacity:0; animation:fadeUp 1s ease forwards; animation-delay:.7s;
+  }
+  .glass-card{
+    position:absolute; width:200px; padding:20px; border-radius:20px;
+    background:var(--glass); border:1px solid var(--glass-border);
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    box-shadow:0 24px 60px -20px rgba(0,0,0,0.6);
+    text-align:right;
+    transition:transform .15s ease-out;
+    will-change: transform;
+  }
+  .swatch{width:100%;height:90px;border-radius:12px;margin-bottom:14px;}
+  .glass-card h3{font-size:14.5px;font-weight:700;margin-bottom:4px;}
+  .glass-card span{font-size:12px;color:var(--ink-soft);}
+
+  .card-1{top:6%;right:6%;transform:rotate(-6deg);}
+  .card-1 .swatch{background:linear-gradient(135deg,var(--violet),#5A3FC0);}
+  .card-2{top:32%;right:36%;transform:rotate(4deg);z-index:2;width:220px;}
+  .card-2 .swatch{background:linear-gradient(135deg,var(--blue),#2B6BC7);}
+  .card-3{bottom:2%;right:12%;transform:rotate(-3deg);}
+  .card-3 .swatch{background:linear-gradient(135deg,var(--teal),#1E9E85);}
+  .card-4{top:14%;left:4%;transform:rotate(5deg);}
+  .card-4 .swatch{background:linear-gradient(135deg,#F2C94C,#C99A2E);}
+
+  /* ---------- marquee ---------- */
+  .marquee-wrap{position:relative;z-index:1;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:26px 0;overflow:hidden;background:rgba(255,255,255,0.02);}
+  .marquee{display:flex;gap:64px;width:max-content;animation:scrollLeft 26s linear infinite;}
+  .marquee span{font-size:15px;font-weight:600;color:var(--ink-soft);letter-spacing:0.02em;white-space:nowrap;}
+  @keyframes scrollLeft{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @media(prefers-reduced-motion:reduce){.marquee{animation:none;}}
+
+  /* ---------- categories ---------- */
+  .categories{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:110px 40px 40px;}
+  .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:48px;flex-wrap:wrap;}
+  .section-eyebrow{font-size:13px;font-weight:600;color:var(--ink-soft);letter-spacing:0.06em;margin-bottom:14px;display:block;}
+  .section-head h2{font-size:clamp(28px,3.4vw,42px);font-weight:800;letter-spacing:-0.02em;line-height:1.2;}
+  .section-link{font-size:14px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:4px;border-bottom:1px solid var(--glass-border);white-space:nowrap;transition:border-color .3s ease,gap .3s ease;}
+  .section-link:hover{border-color:var(--blue);gap:12px;}
+
+  .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  .cat-card{
+    position:relative;border-radius:22px;padding:28px 24px;min-height:230px;
+    background:var(--glass);border:1px solid var(--glass-border);
+    display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;
+    opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease,border-color .3s ease,background .3s ease;
+  }
+  .cat-card.in-view{opacity:1;transform:translateY(0);}
+  .cat-card:hover{border-color:rgba(255,255,255,0.24);background:rgba(255,255,255,0.08);}
+  .cat-card::before{
+    content:"";position:absolute;top:-40%;left:-20%;width:160%;height:160%;
+    background:radial-gradient(circle,var(--glow,var(--violet)),transparent 65%);
+    opacity:0.28;transition:opacity .4s ease, transform .5s ease;pointer-events:none;
+  }
+  .cat-card:hover::before{opacity:0.42;transform:scale(1.08);}
+  .cat-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:auto;background:rgba(255,255,255,0.06);border:1px solid var(--glass-border);position:relative;z-index:1;}
+  .cat-card h3{font-size:18px;font-weight:700;margin-bottom:6px;position:relative;z-index:1;}
+  .cat-card span{font-size:13px;color:var(--ink-soft);position:relative;z-index:1;}
+
+  .cat-1{--glow:var(--violet); transition-delay:.05s;}
+  .cat-2{--glow:var(--blue); transition-delay:.15s;}
+  .cat-3{--glow:var(--teal); transition-delay:.25s;}
+  .cat-4{--glow:#F2C94C; transition-delay:.35s;}
+
+  @media(max-width:1024px){
+    .categories{padding:80px 32px 20px;}
+    .cat-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media(max-width:600px){
+    .categories{padding:60px 20px 10px;}
+    .cat-grid{grid-template-columns:1fr;gap:14px;}
+    .cat-card{min-height:180px;padding:24px 20px;}
+  }
+
+  /* ---------- products ---------- */
+  .products{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:100px 40px 40px;}
+  .filter-pills{display:flex;gap:10px;margin-bottom:44px;flex-wrap:wrap;}
+  .pill{padding:9px 20px;border-radius:100px;font-size:13.5px;font-weight:600;border:1px solid var(--glass-border);color:var(--ink-soft);background:var(--glass);transition:all .25s ease;}
+  .pill.active{color:#08080A;background:linear-gradient(100deg,var(--teal),var(--blue));border-color:transparent;}
+  .pill:not(.active):hover{border-color:rgba(255,255,255,0.25);color:var(--ink);}
+
+  .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+  .prod-card{
+    border-radius:22px;border:1px solid var(--glass-border);background:var(--glass);overflow:hidden;
+    position:relative;
+    opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease,border-color .3s ease;
+  }
+  .prod-card.in-view{opacity:1;transform:translateY(0);}
+  .prod-card:hover{border-color:rgba(255,255,255,0.24);}
+  .prod-media{position:relative;aspect-ratio:1/1;overflow:hidden;}
+  .prod-media .ph{position:absolute;inset:0;transition:transform .5s ease;}
+  .prod-card:hover .prod-media .ph{transform:scale(1.06);}
+  .prod-badge{position:absolute;top:14px;right:14px;font-size:11px;font-weight:700;padding:6px 12px;border-radius:100px;background:rgba(255,255,255,0.55);backdrop-filter:blur(6px);border:1px solid var(--glass-border);z-index:2;}
+  .prod-badge.sale{color:var(--teal);}
+  .wish-btn{
+    position:absolute;top:14px;left:14px;width:36px;height:36px;border-radius:50%;z-index:2;
+    background:rgba(255,255,255,0.55);backdrop-filter:blur(6px);border:1px solid var(--glass-border);
+    display:flex;align-items:center;justify-content:center;color:var(--ink);transition:background .25s ease,color .25s ease;
+  }
+  .wish-btn:hover{background:rgba(255,255,255,0.15);}
+  .wish-btn.active{color:#FF6B81;}
+  .quick-add{
+    position:absolute;left:14px;right:14px;bottom:14px;z-index:2;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:12px;border-radius:12px;font-size:13.5px;font-weight:700;color:#08080A;
+    background:linear-gradient(100deg,var(--teal),var(--blue));
+    opacity:0;transform:translateY(10px);transition:opacity .3s ease,transform .3s ease;
+  }
+  .prod-card:hover .quick-add{opacity:1;transform:translateY(0);}
+    .quick-add.show{opacity:1;transform:translateY(0);}
+  .media-link{position:absolute;inset:0;z-index:1;display:block;}
+  .prod-body h3 a{color:inherit;}
+  .prod-body h3 a:hover{text-decoration:underline;}
+
+  .prod-body{padding:18px 18px 20px;background-color: #eff3fc;}
+  .prod-cat{font-size:11.5px;color:var(--ink-soft);font-weight:600;letter-spacing:0.03em;margin-bottom:6px;display:block;}
+  .prod-body h3{font-size:15.5px;font-weight:700;margin-bottom:10px;line-height:1.4;}
+  .prod-rating{display:flex;align-items:center;gap:6px;margin-bottom:12px;}
+  .prod-rating .stars{color:#F2C94C;font-size:12px;letter-spacing:1px;}
+  .prod-rating span{font-size:11.5px;color:var(--ink-soft);}
+    .prod-price{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .prod-price strong,.prod-price del{white-space:nowrap;}
+  .prod-price strong{font-size:16.5px;font-weight:800;}
+  .prod-price del{font-size:13px;color:var(--ink-soft);opacity:0.6;}
+
+  @media(max-width:1024px){
+    .products{padding:70px 32px 20px;}
+    .prod-grid{grid-template-columns:repeat(2,1fr);gap:18px;}
+  }
+  @media(max-width:600px){
+    .products{padding:50px 20px 10px;}
+    .filter-pills{gap:8px;}
+    .pill{padding:8px 16px;font-size:12.5px;}
+    .quick-add{padding:8px;font-size:11px;gap:5px;}
+    .quick-add svg{width:12px;height:12px;}
+  }
+
+  /* ---------- story ---------- */
+  .story{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:120px 40px 40px;}
+  .story-panel{
+    position:relative;border-radius:32px;overflow:hidden;border:1px solid var(--glass-border);
+    background:
+      linear-gradient(135deg,rgba(255,255,255,0.55),rgba(255,255,255,0.82) 60%),
+      url('images/story.jpg');
+    background-size:cover;background-position:center;
+    padding:80px 60px;display:grid;grid-template-columns:1.1fr 0.9fr;gap:50px;align-items:center;
+  }
+  .story-panel::before{
+    content:"";position:absolute;top:-30%;left:-10%;width:60%;height:160%;
+    background:radial-gradient(circle,rgba(139,108,242,0.35),transparent 70%);
+    filter:blur(60px);pointer-events:none;
+  }
+  .story-text{position:relative;z-index:1;}
+  .story-text .section-eyebrow{color:#C9BFF7;}
+  .story-text h2{font-size:clamp(28px,3.4vw,40px);font-weight:800;line-height:1.35;letter-spacing:-0.01em;margin-bottom:20px;}
+  .story-text p{font-size:16px;line-height:1.9;color:var(--ink-soft);max-width:460px;margin-bottom:36px;}
+
+  .story-stats{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  .stat-box{
+    background:var(--glass);border:1px solid var(--glass-border);border-radius:18px;padding:26px 22px;
+    text-align:center;
+  }
+  .stat-box strong{
+    display:block;font-size:clamp(28px,3vw,38px);font-weight:900;letter-spacing:-0.02em;margin-bottom:8px;
+    background:linear-gradient(100deg,var(--teal),var(--blue),var(--violet));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .stat-box span{font-size:13px;color:var(--ink-soft);font-weight:500;}
+
+  @media(max-width:1024px){
+    .story{padding:80px 32px 20px;}
+    .story-panel{grid-template-columns:1fr;padding:56px 32px;gap:40px;}
+  }
+  @media(max-width:600px){
+    .story{padding:60px 20px 10px;}
+    .story-panel{padding:40px 22px;border-radius:24px;}
+    .story-stats{gap:14px;}
+    .stat-box{padding:20px 14px;}
+  }
+
+  /* ---------- testimonials ---------- */
+  .testimonials{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:110px 40px 40px;}
+  .test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .test-card{
+    border-radius:22px;border:1px solid var(--glass-border);background:var(--glass);padding:32px 28px;
+    display:flex;flex-direction:column;
+    opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease,border-color .3s ease,transform .3s ease;
+  }
+  .test-card.in-view{opacity:1;transform:translateY(0);}
+  .test-card:hover{border-color:rgba(255,255,255,0.22);transform:translateY(-4px);}
+  .test-quote-mark{font-size:40px;font-weight:900;line-height:1;color:transparent;-webkit-background-clip:text;background-clip:text;background:linear-gradient(100deg,var(--teal),var(--blue),var(--violet));margin-bottom:14px;}
+  .test-card .stars{color:#F2C94C;font-size:13px;letter-spacing:2px;margin-bottom:14px;}
+  .test-card p{font-size:15px;line-height:1.9;color:var(--ink);margin-bottom:26px;flex-grow:1;}
+  .test-person{display:flex;align-items:center;gap:12px;}
+  .test-avatar{width:42px;height:42px;border-radius:50%;flex-shrink:0;}
+  .test-person strong{display:block;font-size:14px;font-weight:700;}
+  .test-person span{font-size:12.5px;color:var(--ink-soft);}
+
+  @media(max-width:1024px){
+    .testimonials{padding:70px 32px 20px;}
+    .test-grid{grid-template-columns:1fr;gap:18px;}
+  }
+  @media(max-width:600px){
+    .testimonials{padding:50px 20px 10px;}
+    .test-card{padding:26px 22px;}
+  }
+
+  /* ---------- newsletter ---------- */
+  .newsletter{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:110px 40px 40px;}
+  .news-panel{
+    position:relative;border-radius:28px;overflow:hidden;border:1px solid var(--glass-border);
+    background:var(--bg-soft);padding:70px 60px;text-align:center;
+    display:flex;flex-direction:column;align-items:center;
+  }
+  .news-panel::before{
+    content:"";position:absolute;top:-60%;left:50%;transform:translateX(-50%);width:70%;height:220%;
+    background:radial-gradient(ellipse,rgba(78,156,255,0.25),transparent 65%);pointer-events:none;
+  }
+  .news-panel > *{position:relative;z-index:1;}
+  .news-panel h2{font-size:clamp(26px,3.2vw,38px);font-weight:800;letter-spacing:-0.015em;margin-bottom:14px;}
+  .news-panel p{font-size:15.5px;color:var(--ink-soft);max-width:440px;margin-bottom:34px;}
+
+  .news-form{display:flex;gap:10px;width:100%;max-width:440px;}
+  .news-form input{
+    flex:1;padding:15px 20px;border-radius:100px;border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.05);color:var(--ink);font-family:inherit;font-size:14.5px;outline:none;
+    transition:border-color .25s ease,background .25s ease;
+  }
+  .news-form input::placeholder{color:var(--ink-soft);}
+  .news-form input:focus{border-color:var(--blue);background:rgba(255,255,255,0.08);}
+  .news-form button{
+    padding:15px 28px;border-radius:100px;font-size:14px;font-weight:700;color:#08080A;white-space:nowrap;
+    background:linear-gradient(100deg,var(--teal),var(--blue),var(--violet));background-size:200% 100%;
+    transition:background-position .5s ease,transform .25s ease;
+  }
+  .news-form button:hover{background-position:100% 0;transform:translateY(-2px);}
+  .news-msg{margin-top:16px;font-size:13.5px;color:var(--teal);height:16px;opacity:0;transition:opacity .3s ease;}
+  .news-msg.show{opacity:1;}
+  .news-note{margin-top:22px;font-size:12px;color:var(--ink-soft);}
+
+  @media(max-width:1024px){ .newsletter{padding:70px 32px 20px;} .news-panel{padding:56px 32px;} }
+  @media(max-width:600px){
+    .newsletter{padding:50px 20px 10px;}
+    .news-panel{padding:44px 22px;border-radius:22px;}
+    .news-form{flex-direction:column;}
+    .news-form button{width:100%;}
+  }
+
+  /* ---------- footer ---------- */
+  footer{position:relative;z-index:1;margin-top:100px;border-top:1px solid var(--line);}
+  footer::before{content:"";position:absolute;top:-1px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--violet),var(--blue),var(--teal),transparent);}
+  .footer-top{max-width:1320px;margin:0 auto;padding:70px 40px 50px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1.2fr;gap:40px;}
+  .footer-brand .logo{margin-bottom:18px;}
+  .footer-brand p{font-size:14px;line-height:1.85;color:var(--ink-soft);max-width:280px;margin-bottom:22px;}
+  .social-row{display:flex;gap:10px;}
+  .social-row a{
+    width:38px;height:38px;border-radius:50%;border:1px solid var(--glass-border);background:var(--glass);
+    display:flex;align-items:center;justify-content:center;color:var(--ink-soft);
+    transition:color .25s ease,border-color .25s ease,transform .25s ease;
+  }
+  .social-row a:hover{color:var(--ink);border-color:rgba(255,255,255,0.28);transform:translateY(-2px);}
+
+  .footer-col h4{font-size:14px;font-weight:700;margin-bottom:20px;}
+  .footer-col ul{display:flex;flex-direction:column;gap:13px;}
+  .footer-col ul li a{font-size:13.5px;color:var(--ink-soft);transition:color .2s ease;}
+  .footer-col ul li a:hover{color:var(--ink);}
+
+  .footer-col.contact ul li{font-size:13.5px;color:var(--ink-soft);display:flex;align-items:flex-start;gap:10px;line-height:1.7;}
+  .footer-col.contact svg{flex-shrink:0;margin-top:2px;color:var(--blue);}
+
+  .footer-bottom{
+    max-width:1320px;margin:0 auto;padding:24px 40px 34px;
+    display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+    border-top:1px solid var(--line);
+  }
+  .footer-bottom .copy{font-size:12.5px;color:var(--ink-soft);}
+  .payment-badges{display:flex;gap:8px;}
+  .payment-badges span{
+    font-size:11px;font-weight:700;color:var(--ink-soft);border:1px solid var(--glass-border);
+    padding:6px 12px;border-radius:8px;background:var(--glass);
+  }
+
+  .back-to-top{
+    position:fixed;bottom:28px;left:28px;width:46px;height:46px;border-radius:50%;z-index:90;
+    background:var(--bg-soft);border:1px solid var(--glass-border);color:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;transform:translateY(10px);
+    transition:opacity .3s ease,transform .3s ease,border-color .3s ease;
+    backdrop-filter:blur(10px);
+  }
+  .back-to-top.show{opacity:1;pointer-events:auto;transform:translateY(0);}
+  .back-to-top:hover{border-color:var(--blue);}
+
+  @media(max-width:1024px){
+    .footer-top{grid-template-columns:1fr 1fr;padding:56px 32px 40px;}
+    .footer-brand{grid-column:1 / -1;}
+  }
+  @media(max-width:600px){
+    .footer-top{grid-template-columns:1fr 1fr;gap:32px 20px;padding:44px 20px 30px;}
+    .footer-bottom{padding:20px 20px 26px;flex-direction:column;align-items:flex-start;}
+    .back-to-top{left:16px;bottom:16px;width:42px;height:42px;}
+  }
+
+  /* ---------- responsive ---------- */
+  @media(max-width:1024px){
+    .hero{padding:150px 32px 60px;}
+    .card-stage{height:auto;display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:520px;}
+    .glass-card{position:static;width:100%;transform:none !important;}
+  }
+  @media(max-width:768px){
+    nav,.nav-actions .cta-btn{display:none;}
+    .burger{display:flex;}
+    .nav-wrap{padding:16px 20px;}
+    .hero{padding:120px 20px 50px;}
+    .hero h1{font-size:clamp(32px,9vw,44px);}
+    .hero p{font-size:16px;}
+    .card-stage{grid-template-columns:1fr 1fr;gap:12px;}
+    .swatch{height:70px;}
+    .marquee span{font-size:13px;}
+  }
+  .search-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:90px 20px;}
+  .search-overlay.show{display:flex;}
+  .search-box{width:100%;max-width:560px;background:var(--bg-soft);border:1px solid var(--glass-border);border-radius:20px;padding:8px 8px 8px 18px;display:flex;align-items:center;gap:12px;color:var(--ink-soft);}
+  .search-box input{flex:1;background:none;border:none;outline:none;color:var(--ink);font-family:inherit;font-size:15px;padding:12px 4px;}
+  .search-box button.search-close{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);flex-shrink:0;transition:background .2s ease;}
+  .search-box button.search-close:hover{background:rgba(255,255,255,0.08);}
+
+  :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:8px;}
+</style>
+</head>
+<body>
+
+<div class="orb-field">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<header id="siteHeader">
+  <div class="nav-wrap">
+    <a href="index.html" class="logo"><span class="logo-dot"></span><span class="logo-text"><span class="logo-main">ZOROUFE</span><span class="logo-sub">LUXE</span></span></a>
+    <nav><ul>
+      <li><a href="index.html">خانه</a></li>
+      <li><a href="04-product-listing.html">دسته‌بندی‌ها</a></li>
+      <li><a href="04-product-listing.html">برندها</a></li>
+      <li><a href="04-product-listing.html?discount=1">تخفیف‌ها</a></li>
+      <li><a href="#">تماس</a></li>
+    </ul></nav>
+    <div class="nav-actions">
+      <button type="button" class="icon-btn" id="searchBtn" aria-label="جستجو"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      <a href="16-wishlist.html" class="icon-btn" aria-label="علاقه‌مندی‌های من"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.6-10-9.2C.5 8 2 4.5 5.6 4c2.2-.3 4 .9 6.4 3.4C14.4 4.9 16.2 3.7 18.4 4c3.6.5 5.1 4 3.6 7.8-2.5 4.6-10 9.2-10 9.2z"/></svg></a>
+        <a href="15-login.html" id="accountBtn" class="icon-btn" aria-label="حساب کاربری"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+        <a href="06-cart.html" class="icon-btn" aria-label="سبد خرید"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg><span class="cart-count">3</span></a>
+      <a href="04-product-listing.html" class="cta-btn">فروشگاه</a>
+      <button class="burger" id="burgerBtn"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-panel" id="mobilePanel">
+    <ul>
+      <li><a href="index.html">خانه</a></li><li><a href="04-product-listing.html">دسته‌بندی‌ها</a></li><li><a href="04-product-listing.html">برندها</a></li><li><a href="04-product-listing.html?discount=1">تخفیف‌ها</a></li><li><a href="#">تماس</a></li>
+      <li><a href="04-product-listing.html" class="cta-btn">فروشگاه</a></li>
+    </ul>
+  </div>
+</header>
+
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    <input type="text" id="searchInput" placeholder="دنبال چی می‌گردی؟">
+    <button class="search-close" id="searchClose" aria-label="بستن جستجو">✕</button>
+  </div>
+</div>
+
+<section class="hero">
+  <span class="hero-eyebrow"><span class="pulse"></span> بیش از ۲۰۰ برند، یک تجربه‌ی خرید</span>
+
+  <h1>
+    <span class="line">خونه‌ت رو با <span class="grad">هوشمندی</span></span>
+    <span class="line">دوباره بچین</span>
+  </h1>
+
+  <p>از ظرف و ظروف تا دکور، روشنایی و لوازم آشپزخانه؛ محصولات منتخب از بهترین برندهای دنیا، در یک فروشگاه.</p>
+
+  <div class="hero-actions">
+    <a href="04-product-listing.html" class="btn-primary">شروع خرید</a>
+    <a href="04-product-listing.html" class="btn-ghost">مشاهده دسته‌بندی‌ها</a>
+  </div>
+
+  <div class="card-stage" id="cardStage">
+    <div class="glass-card card-1"><div class="swatch"></div><h3>ظروف و آشپزخانه</h3><span>۴۲۰+ محصول</span></div>
+    <div class="glass-card card-2"><div class="swatch"></div><h3>دکوراسیون</h3><span>۳۱۰+ محصول</span></div>
+    <div class="glass-card card-3"><div class="swatch"></div><h3>نور و روشنایی</h3><span>۱۸۰+ محصول</span></div>
+    <div class="glass-card card-4"><div class="swatch"></div><h3>نظافت خانه</h3><span>۱۴۰+ محصول</span></div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee" id="marquee">
+    <span>برند یک</span><span>برند دو</span><span>برند سه</span><span>برند چهار</span><span>برند پنج</span><span>برند شش</span>
+    <span>برند یک</span><span>برند دو</span><span>برند سه</span><span>برند چهار</span><span>برند پنج</span><span>برند شش</span>
+  </div>
+</div>
+
+<section class="categories">
+  <div class="section-head">
+    <div>
+      <span class="section-eyebrow">دسته‌بندی‌ها</span>
+      <h2>از کجای خونه شروع کنیم؟</h2>
+    </div>
+    <a href="04-product-listing.html" class="section-link">مشاهده‌ی همه‌ی دسته‌ها ←</a>
+  </div>
+
+  <div class="cat-grid">
+    <a href="04-product-listing.html?cat=kitchen" class="cat-card cat-1">
+      <div class="cat-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v7a4 4 0 0 0 4 4h1"/><path d="M8 3v11"/><path d="M18 3c1 3-1 6-3 7v11"/></svg>
+      </div>
+      <h3>ظروف و آشپزخانه</h3>
+      <span>۴۲۰+ محصول</span>
+    </a>
+
+    <a href="04-product-listing.html?cat=decor" class="cat-card cat-2">
+      <div class="cat-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
+      </div>
+      <h3>دکوراسیون</h3>
+      <span>۳۱۰+ محصول</span>
+    </a>
+
+    <a href="04-product-listing.html?cat=lighting" class="cat-card cat-3">
+      <div class="cat-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2.3h6c0-1.1.4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>
+      </div>
+      <h3>نور و روشنایی</h3>
+      <span>۱۸۰+ محصول</span>
+    </a>
+
+    <a href="04-product-listing.html?cat=cleaning" class="cat-card cat-4">
+      <div class="cat-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v4H4z"/><path d="M6 8v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>
+      </div>
+      <h3>نظافت خانه</h3>
+      <span>۱۴۰+ محصول</span>
+    </a>
+  </div>
+</section>
+
+<section class="products">
+  <div class="section-head">
+    <div>
+      <span class="section-eyebrow">پرفروش‌ها</span>
+      <h2>محبوب‌ترین‌های این هفته</h2>
+    </div>
+    <a href="04-product-listing.html" class="section-link">مشاهده‌ی همه‌ی محصولات ←</a>
+  </div>
+
+  <div class="filter-pills">
+    <button class="pill active">همه</button>
+    <button class="pill">ظروف و آشپزخانه</button>
+    <button class="pill">دکوراسیون</button>
+    <button class="pill">نور و روشنایی</button>
+    <button class="pill">نظافت خانه</button>
+  </div>
+
+  <div class="prod-grid">
+    <article class="prod-card">
+      <div class="prod-media">
+        <a href="05-product-detail.html" class="media-link" aria-label="سرویس چینی ۱۲ نفره سپید"></a>
+        <div class="ph" style="background:linear-gradient(150deg,#8B6CF2,#3B2E7A);"></div>
+        <span class="prod-badge sale">٪۲۰ تخفیف</span>
+        <button class="wish-btn" aria-label="افزودن به علاقه‌مندی‌ها"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.6-10-9.2C.5 8 2 4.5 5.6 4c2.2-.3 4 .9 6.4 3.4C14.4 4.9 16.2 3.7 18.4 4c3.6.5 5.1 4 3.6 7.8-2.5 4.6-10 9.2-10 9.2z"/></svg></button>
+        <div class="quick-add"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg> افزودن به سبد</div>
+      </div>
+      <div class="prod-body">
+        <span class="prod-cat">ظروف و آشپزخانه</span>
+        <h3><a href="05-product-detail.html">سرویس چینی ۱۲ نفره سپید</a></h3>
+        <div class="prod-rating"><span class="stars">★★★★★</span><span>(۱۲۴)</span></div>
+        <div class="prod-price"><strong>۴٬۲۰۰٬۰۰۰ ت</strong><del>۵٬۲۵۰٬۰۰۰ ت</del></div>
+      </div>
+    </article>
+
+    <article class="prod-card">
+      <div class="prod-media">
+        <a href="05-product-detail.html" class="media-link" aria-label="گلدان سرامیکی موج‌دار"></a>
+        <div class="ph" style="background:linear-gradient(150deg,#4E9CFF,#1F4E8C);"></div>
+        <span class="prod-badge">جدید</span>
+        <button class="wish-btn" aria-label="افزودن به علاقه‌مندی‌ها"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.6-10-9.2C.5 8 2 4.5 5.6 4c2.2-.3 4 .9 6.4 3.4C14.4 4.9 16.2 3.7 18.4 4c3.6.5 5.1 4 3.6 7.8-2.5 4.6-10 9.2-10 9.2z"/></svg></button>
+        <div class="quick-add"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg> افزودن به سبد</div>
+      </div>
+      <div class="prod-body">
+        <span class="prod-cat">دکوراسیون</span>
+        <h3><a href="05-product-detail.html">گلدان سرامیکی موج‌دار</a></h3>
+        <div class="prod-rating"><span class="stars">★★★★★</span><span>(۸۹)</span></div>
+        <div class="prod-price"><strong>۱٬۱۵۰٬۰۰۰ ت</strong></div>
+      </div>
+    </article>
+
+    <article class="prod-card">
+      <div class="prod-media">
+        <a href="05-product-detail.html" class="media-link" aria-label="آباژور رومیزی استوانه‌ای"></a>
+        <div class="ph" style="background:linear-gradient(150deg,#3EE0C4,#12766A);"></div>
+        <button class="wish-btn" aria-label="افزودن به علاقه‌مندی‌ها"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.6-10-9.2C.5 8 2 4.5 5.6 4c2.2-.3 4 .9 6.4 3.4C14.4 4.9 16.2 3.7 18.4 4c3.6.5 5.1 4 3.6 7.8-2.5 4.6-10 9.2-10 9.2z"/></svg></button>
+        <div class="quick-add"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg> افزودن به سبد</div>
+      </div>
+      <div class="prod-body">
+        <span class="prod-cat">نور و روشنایی</span>
+        <h3><a href="05-product-detail.html">آباژور رومیزی استوانه‌ای</a></h3>
+        <div class="prod-rating"><span class="stars">★★★★☆</span><span>(۵۶)</span></div>
+        <div class="prod-price"><strong>۹۸۰٬۰۰۰ ت</strong></div>
+      </div>
+    </article>
+
+    <article class="prod-card">
+      <div class="prod-media">
+        <a href="05-product-detail.html" class="media-link" aria-label="ست جاروبرقی بی‌سیم شارژی"></a>
+        <div class="ph" style="background:linear-gradient(150deg,#F2C94C,#8C6A1A);"></div>
+        <span class="prod-badge sale">٪۱۵ تخفیف</span>
+        <button class="wish-btn" aria-label="افزودن به علاقه‌مندی‌ها"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.6-10-9.2C.5 8 2 4.5 5.6 4c2.2-.3 4 .9 6.4 3.4C14.4 4.9 16.2 3.7 18.4 4c3.6.5 5.1 4 3.6 7.8-2.5 4.6-10 9.2-10 9.2z"/></svg></button>
+        <div class="quick-add"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg> افزودن به سبد</div>
+      </div>
+      <div class="prod-body">
+        <span class="prod-cat">نظافت خانه</span>
+        <h3><a href="05-product-detail.html">ست جاروبرقی بی‌سیم شارژی</a></h3>
+        <div class="prod-rating"><span class="stars">★★★★★</span><span>(۲۰۳)</span></div>
+        <div class="prod-price"><strong>۳٬۴۰۰٬۰۰۰ ت</strong><del>۴٬۰۰۰٬۰۰۰ ت</del></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="story">
+  <div class="story-panel">
+    <div class="story-text">
+      <span class="section-eyebrow">داستان ما</span>
+      <h2>ما فقط نمی‌فروشیم؛<br>برای خونه‌ت گلچین می‌کنیم</h2>
+      <p>هر محصول تو زوروفه قبل از رسیدن به ویترین، از یه فیلتر کیفیت رد می‌شه. به‌جای همه‌چیز، فقط چیزهایی رو می‌ذاریم که خودمون تو خونه‌مون استفاده می‌کنیم.</p>
+      <a href="#" class="btn-ghost">بیشتر درباره‌مون بدون ←</a>
+    </div>
+    <div class="story-stats">
+      <div class="stat-box"><strong data-count="200">۰</strong><span>برند منتخب</span></div>
+      <div class="stat-box"><strong data-count="1200">۰</strong><span>محصول فعال</span></div>
+      <div class="stat-box"><strong data-count="98">۰</strong><span>٪ رضایت مشتری</span></div>
+      <div class="stat-box"><strong data-count="24">۰</strong><span>ساعت پشتیبانی</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="section-head">
+    <div>
+      <span class="section-eyebrow">نظرات مشتریان</span>
+      <h2>چیزی که مشتری‌ها می‌گن</h2>
+    </div>
+  </div>
+
+  <div class="test-grid">
+    <article class="test-card">
+      <span class="test-quote-mark">”</span>
+      <div class="stars">★★★★★</div>
+      <p>سرویس چینی‌ای که سفارش دادم دقیقاً همون چیزی بود که تو عکس‌ها دیدم. بسته‌بندیش هم فوق‌العاده مطمئن بود، هیچی نشکست.</p>
+      <div class="test-person">
+        <div class="test-avatar" style="background:linear-gradient(135deg,#8B6CF2,#4E9CFF);"></div>
+        <div><strong>نگار احمدی</strong><span>تهران</span></div>
+      </div>
+    </article>
+
+    <article class="test-card">
+      <span class="test-quote-mark">”</span>
+      <div class="stars">★★★★★</div>
+      <p>تنوع برندها خیلی بیشتر از چیزیه که فکرشو می‌کردم. تو یه خرید هم گلدون گرفتم هم آباژور، هر دو کیفیتشون عالی بود.</p>
+      <div class="test-person">
+        <div class="test-avatar" style="background:linear-gradient(135deg,#3EE0C4,#4E9CFF);"></div>
+        <div><strong>آرش محمودی</strong><span>اصفهان</span></div>
+      </div>
+    </article>
+
+    <article class="test-card">
+      <span class="test-quote-mark">”</span>
+      <div class="stars">★★★★☆</div>
+      <p>پشتیبانیشون واقعاً سریع جواب داد وقتی سوال داشتم. ارسال هم زودتر از موعد رسید دستم. حتماً بازم خرید می‌کنم.</p>
+      <div class="test-person">
+        <div class="test-avatar" style="background:linear-gradient(135deg,#F2C94C,#8B6CF2);"></div>
+        <div><strong>سارا کریمی</strong><span>شیراز</span></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="newsletter">
+  <div class="news-panel">
+    <h2>اول از همه باخبر شو</h2>
+    <p>تخفیف‌های ویژه، محصولات جدید و پیشنهادهای اختصاصی رو مستقیم تو ایمیلت بگیر — بدون اسپم، فقط چیزهایی که واقعاً به‌دردت می‌خوره.</p>
+    <form class="news-form" id="newsForm">
+      <input type="email" placeholder="ایمیلت رو وارد کن" id="newsEmail" required>
+      <button type="submit">عضویت</button>
+    </form>
+    <p class="news-msg" id="newsMsg">عضویتت با موفقیت ثبت شد ✓</p>
+    <span class="news-note">هر وقت خواستی، با یک کلیک لغو عضویت کن</span>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="index.html" class="logo"><span class="logo-dot"></span><span class="logo-text"><span class="logo-main">ZOROUFE</span><span class="logo-sub">LUXE</span></span></a>
+      <p>فروشگاه چندبرند لوازم خانه؛ ظروف، دکوراسیون، روشنایی و نظافت خونه از بهترین برندهای منتخب، در یک آدرس.</p>
+      <div class="social-row">
+        <a href="#" aria-label="اینستاگرام"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+        <a href="#" aria-label="تلگرام"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></a>
+        <a href="#" aria-label="پینترست"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l3 3"/></svg></a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>دسته‌بندی‌ها</h4>
+      <ul>
+        <li><a href="04-product-listing.html?cat=kitchen">ظروف و آشپزخانه</a></li>
+        <li><a href="04-product-listing.html?cat=decor">دکوراسیون</a></li>
+        <li><a href="04-product-listing.html?cat=lighting">نور و روشنایی</a></li>
+        <li><a href="04-product-listing.html?cat=cleaning">نظافت خانه</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>شرکت</h4>
+      <ul>
+        <li><a href="#">درباره ما</a></li>
+        <li><a href="04-product-listing.html">برندهای ما</a></li>
+        
+       
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>خدمات مشتریان</h4>
+      <ul>
+        <li><a href="#">پیگیری سفارش</a></li>
+        <li><a href="#">شرایط بازگشت کالا</a></li>
+        <li><a href="#">سوالات متداول</a></li>
+        <li><a href="#">تماس با ما</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col contact">
+      <h4>ارتباط با ما</h4>
+      <ul>
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92z"/></svg> +989105452530</li>
+        
+
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span class="copy">© ۱۴۰۵ زوروفه لوکس. تمامی حقوق محفوظ است.</span>
+    
+  </div>
+</footer>
+
+<button class="back-to-top" id="backToTop" aria-label="بازگشت به بالا">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+</button>
+
+<script src="api.js"></script>
+<script>
+  // header blur on scroll
+  const header = document.getElementById('siteHeader');
+  const backToTop = document.getElementById('backToTop');
+  backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+    backToTop.classList.toggle('show', window.scrollY > 600);
+  });
+
+  // mobile menu
+  const burger = document.getElementById('burgerBtn');
+  const panel = document.getElementById('mobilePanel');
+  burger.addEventListener('click', () => panel.classList.toggle('open'));
+
+  // mouse parallax on glass cards (desktop only)
+  const stage = document.getElementById('cardStage');
+  const cards = document.querySelectorAll('.glass-card');
+  if (window.matchMedia('(min-width: 1025px)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    stage.addEventListener('mousemove', (e) => {
+      const rect = stage.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      cards.forEach((card, i) => {
+        const depth = (i + 1) * 10;
+        const baseRotate = getComputedStyle(card).getPropertyValue('--r') || '0deg';
+        card.style.transform = `translate(${x * depth}px, ${y * depth}px)`;
+      });
+    });
+    stage.addEventListener('mouseleave', () => {
+      cards.forEach(card => card.style.transform = '');
+    });
+  }
+
+  // scroll-reveal for category + product cards
+  const revealEls = document.querySelectorAll('.cat-card, .prod-card, .test-card');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // wishlist toggle
+  document.querySelectorAll('.wish-btn').forEach(btn => {
+    btn.addEventListener('click', () => btn.classList.toggle('active'));
+  });
+
+  // filter pills (visual state only for now)
+  document.querySelectorAll('.pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+    });
+  });
+
+  // count-up stats
+  const statEls = document.querySelectorAll('.stat-box strong');
+  const countObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = parseInt(el.dataset.count, 10);
+        const duration = 1400;
+        const start = performance.now();
+        const toFa = n => n.toLocaleString('fa-IR');
+        function tick(now){
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = toFa(Math.round(eased * target));
+          if (progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+        countObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  statEls.forEach(el => countObserver.observe(el));
+
+  // newsletter form
+  const newsForm = document.getElementById('newsForm');
+  const newsMsg = document.getElementById('newsMsg');
+  newsForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    newsMsg.classList.add('show');
+    newsForm.reset();
+    setTimeout(() => newsMsg.classList.remove('show'), 4000);
+  });
+  // search overlay
+  const searchBtn = document.getElementById('searchBtn');
+  const searchOverlay = document.getElementById('searchOverlay');
+  const searchInput = document.getElementById('searchInput');
+  const searchClose = document.getElementById('searchClose');
+  searchBtn.addEventListener('click', () => {
+    searchOverlay.classList.add('show');
+    searchInput.focus();
+  });
+  searchClose.addEventListener('click', () => searchOverlay.classList.remove('show'));
+  searchOverlay.addEventListener('click', (e) => { if (e.target === searchOverlay) searchOverlay.classList.remove('show'); });
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && searchInput.value.trim()){
+      window.location.href = '04-product-listing.html?search=' + encodeURIComponent(searchInput.value.trim());
+    }
+  });
+</script>
+</body>
+</html>

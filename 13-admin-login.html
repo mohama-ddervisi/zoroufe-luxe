@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ورود ادمین | ZOROUFE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F6FB; --bg-soft:#FFFFFF; --ink:#2B2A33; --ink-soft:#6B6875;
+    --violet:#8B6CF2; --blue:#4E9CFF; --teal:#3EE0C4;
+    --glass:rgba(0,0,0,0.04); --glass-border:rgba(0,0,0,0.1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.35;}
+  .orb-1{width:440px;height:440px;background:radial-gradient(circle,var(--violet),transparent 70%);top:-12%;right:-10%;}
+  .orb-2{width:380px;height:380px;background:radial-gradient(circle,var(--blue),transparent 70%);bottom:-12%;left:-10%;}
+
+  .login-card{position:relative;z-index:1;width:100%;max-width:380px;background:var(--glass);border:1px solid var(--glass-border);border-radius:22px;padding:36px 32px;margin:20px;}
+  .logo{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:6px;}
+  .logo-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--blue));box-shadow:0 0 14px var(--violet);}
+  .logo-text{font-size:19px;font-weight:800;}
+  .login-sub{text-align:center;font-size:12.5px;color:var(--ink-soft);margin-bottom:28px;}
+  .form-field{margin-bottom:16px;}
+  .form-field label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:8px;}
+  .form-field input{width:100%;padding:13px 16px;border-radius:12px;border:1px solid var(--glass-border);background:rgba(255,255,255,0.04);color:var(--ink);font-size:14px;outline:none;font-family:inherit;transition:border-color .2s;}
+  .form-field input:focus{border-color:var(--blue);}
+  .login-btn{width:100%;padding:14px;border-radius:12px;font-size:14.5px;font-weight:800;color:#08080A;background:linear-gradient(100deg,var(--teal),var(--blue),var(--violet));background-size:200% 100%;transition:background-position .5s ease;border:none;cursor:pointer;font-family:inherit;margin-top:6px;}
+  .login-btn:hover{background-position:100% 0;}
+  .login-btn:disabled{opacity:0.6;cursor:not-allowed;}
+  .login-err{font-size:13px;color:#FF6B81;margin-top:14px;display:none;text-align:center;}
+  .login-err.show{display:block;}
+  .back-link{display:block;text-align:center;margin-top:20px;font-size:12.5px;color:var(--ink-soft);text-decoration:none;}
+  .back-link:hover{color:var(--ink);}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div><div class="orb orb-2"></div>
+
+<div class="login-card">
+  <div class="logo"><span class="logo-dot"></span><span class="logo-text">ZOROUFE</span></div>
+  <p class="login-sub">ورود به پنل مدیریت</p>
+
+  <form id="loginForm">
+    <div class="form-field">
+      <label>نام کاربری</label>
+      <input type="text" id="username" autocomplete="username" required>
+    </div>
+    <div class="form-field">
+      <label>رمز عبور</label>
+      <input type="password" id="password" autocomplete="current-password" required>
+    </div>
+    <button type="submit" class="login-btn" id="loginBtn">ورود</button>
+    <p class="login-err" id="loginErr"></p>
+  </form>
+
+  <a href="index.html" class="back-link">← بازگشت به فروشگاه</a>
+</div>
+
+<script src="api.js"></script>
+<script>
+  // اگه از قبل لاگین بودی، مستقیم برو داشبورد
+  if (getAdminToken()) { window.location.href = '14-admin-dashboard.html'; }
+
+  const form = document.getElementById('loginForm');
+  const btn = document.getElementById('loginBtn');
+  const errEl = document.getElementById('loginErr');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errEl.classList.remove('show');
+    btn.disabled = true;
+    btn.textContent = 'در حال ورود...';
+
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    try {
+      const res = await adminLogin(username, password);
+      setAdminToken(res.token);
+      window.location.href = '14-admin-dashboard.html';
+    } catch (err) {
+      errEl.textContent = err.message || 'ورود ناموفق بود';
+      errEl.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = 'ورود';
+    }
+  });
+</script>
+</body>
+</html>

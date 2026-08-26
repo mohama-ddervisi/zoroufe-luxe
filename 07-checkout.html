@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسویه حساب | ZOROUFE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F6FB; --bg-soft:#FFFFFF; --ink:#2B2A33; --ink-soft:#6B6875;
+    --violet:#8B6CF2; --blue:#4E9CFF; --teal:#3EE0C4;
+    --glass:rgba(0,0,0,0.04); --glass-border:rgba(0,0,0,0.1);
+    --line:rgba(0,0,0,0.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;position:relative;}
+  a{text-decoration:none;color:inherit;} ul{list-style:none;} button{font-family:inherit;border:none;background:none;cursor:pointer;}
+  input,select{font-family:inherit;}
+
+  .orb-field{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+  .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.35;}
+  .orb-1{width:420px;height:420px;background:radial-gradient(circle,var(--violet),transparent 70%);top:-14%;right:-10%;}
+  .orb-2{width:360px;height:360px;background:radial-gradient(circle,var(--teal),transparent 70%);bottom:-14%;left:-10%;}
+
+  header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.78);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);}
+  .nav-wrap{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;}
+  .logo{font-size:20px;font-weight:800;display:flex;align-items:center;gap:9px;}
+  .logo-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--blue));box-shadow:0 0 14px var(--violet);}
+  .logo-text{display:flex;flex-direction:column;line-height:1;gap:3px;}
+  .logo-main{font-size:19px;font-weight:800;letter-spacing:-0.01em;}
+  .logo-sub{font-size:9px;font-weight:600;letter-spacing:0.32em;color:var(--ink-soft);}
+  .secure-tag{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-soft);font-weight:600;}
+  .secure-tag svg{color:var(--teal);}
+
+  .page-wrap{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:40px 40px 100px;}
+
+  /* stepper */
+  .steps{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:44px;}
+  .step{display:flex;align-items:center;gap:10px;}
+  .step-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;border:1px solid var(--glass-border);color:var(--ink-soft);background:var(--glass);}
+  .step.done .step-dot{background:linear-gradient(100deg,var(--teal),var(--blue));color:#08080A;border-color:transparent;}
+  .step.active .step-dot{border-color:var(--blue);color:var(--ink);}
+  .step span.label{font-size:13px;font-weight:600;color:var(--ink-soft);}
+  .step.active span.label,.step.done span.label{color:var(--ink);}
+  .step-line{width:50px;height:1px;background:var(--line);}
+
+  .checkout-layout{display:grid;grid-template-columns:1.5fr 1fr;gap:32px;align-items:start;}
+
+  .form-card{border-radius:22px;background:var(--glass);border:1px solid var(--glass-border);padding:28px;margin-bottom:20px;}
+  .form-card h3{font-size:15.5px;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+  .form-card h3 svg{color:var(--blue);}
+
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .form-field{margin-bottom:16px;}
+  .form-field.full{grid-column:1 / -1;}
+  .form-field label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:8px;}
+  .form-field input,.form-field select,.form-field textarea{
+    width:100%;padding:13px 16px;border-radius:12px;border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.04);color:var(--ink);font-size:14px;outline:none;
+    transition:border-color .2s ease,background .2s ease;
+  }
+  .form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--blue);background:rgba(255,255,255,0.07);}
+  .form-field textarea{resize:vertical;min-height:70px;}
+
+  .pay-options{display:flex;flex-direction:column;gap:12px;}
+  .pay-opt{
+    display:flex;align-items:center;gap:14px;padding:16px;border-radius:14px;
+    border:1px solid var(--glass-border);background:rgba(255,255,255,0.03);cursor:pointer;
+    transition:border-color .2s ease,background .2s ease;
+  }
+  .pay-opt.selected{border-color:var(--blue);background:rgba(78,156,255,0.08);}
+  .pay-opt .radio{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--glass-border);flex-shrink:0;position:relative;}
+  .pay-opt.selected .radio{border-color:var(--blue);}
+  .pay-opt.selected .radio::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--blue);}
+  .pay-opt .pay-info strong{display:block;font-size:14px;font-weight:700;margin-bottom:3px;}
+  .pay-opt .pay-info span{font-size:12px;color:var(--ink-soft);}
+  .pay-opt svg{margin-right:auto;color:var(--ink-soft);}
+
+  /* summary */
+  .summary{position:sticky;top:96px;border-radius:22px;background:var(--glass);border:1px solid var(--glass-border);padding:26px;}
+  .summary h3{font-size:16px;font-weight:800;margin-bottom:20px;}
+  .mini-items{display:flex;flex-direction:column;gap:14px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--line);}
+  .mini-item{display:flex;align-items:center;gap:12px;}
+  .mini-thumb{width:48px;height:48px;border-radius:10px;flex-shrink:0;position:relative;}
+  .mini-thumb .qty-badge{position:absolute;top:-6px;left:-6px;width:18px;height:18px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .mini-info{flex:1;min-width:0;}
+  .mini-info h4{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .mini-info span{font-size:12px;color:var(--ink-soft);}
+
+  .summary-row{display:flex;justify-content:space-between;font-size:14px;color:var(--ink-soft);padding:8px 0;}
+  .summary-row.total{border-top:1px solid var(--line);margin-top:8px;padding-top:16px;font-size:16px;font-weight:800;color:var(--ink);}
+
+  .place-order-btn{
+    width:100%;padding:16px;border-radius:14px;font-size:15px;font-weight:800;color:#08080A;margin-top:20px;
+    background:linear-gradient(100deg,var(--teal),var(--blue),var(--violet));background-size:200% 100%;
+    box-shadow:0 0 34px -10px rgba(78,156,255,0.5);transition:background-position .5s ease,transform .25s ease;
+  }
+  .place-order-btn:hover{background-position:100% 0;transform:translateY(-2px);}
+  .place-order-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+
+  /* success modal */
+  .success-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+  .success-overlay.show{display:flex;}
+  .success-modal{background:var(--bg-soft);border:1px solid var(--glass-border);border-radius:24px;padding:44px 34px;max-width:420px;text-align:center;}
+  .success-icon{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--blue));display:flex;align-items:center;justify-content:center;margin:0 auto 22px;color:#08080A;}
+  .success-modal h2{font-size:20px;font-weight:800;margin-bottom:12px;}
+  .success-modal p{font-size:14px;color:var(--ink-soft);line-height:1.8;margin-bottom:26px;}
+  .success-modal a{display:inline-block;padding:14px 30px;border-radius:100px;font-size:14px;font-weight:700;color:#08080A;background:linear-gradient(100deg,var(--teal),var(--blue));}
+
+  @media(max-width:1024px){
+    .checkout-layout{grid-template-columns:1fr;}
+    .summary{position:static;}
+  }
+  @media(max-width:600px){
+    .nav-wrap{padding:16px 20px;}
+    .secure-tag span{display:none;}
+    .page-wrap{padding:28px 20px 70px;}
+    .form-grid{grid-template-columns:1fr;}
+    .steps{gap:6px;}
+    .step span.label{display:none;}
+    .step-line{width:24px;}
+  }
+  :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:8px;}
+</style>
+</head>
+<body>
+
+<div class="orb-field"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+
+<header>
+  <div class="nav-wrap">
+    <a href="index.html" class="logo"><span class="logo-dot"></span><span class="logo-text"><span class="logo-main">ZOROUFE</span><span class="logo-sub">LUXE</span></span></a>
+    <div class="secure-tag">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <span>پرداخت امن و رمزنگاری‌شده</span>
+    </div>
+  </div>
+</header>
+
+<div class="page-wrap">
+  <div class="steps">
+    <div class="step done"><div class="step-dot">✓</div><span class="label">سبد خرید</span></div>
+    <div class="step-line"></div>
+    <div class="step active"><div class="step-dot">۲</div><span class="label">اطلاعات ارسال</span></div>
+    <div class="step-line"></div>
+    <div class="step"><div class="step-dot">۳</div><span class="label">پرداخت</span></div>
+  </div>
+
+  <div class="checkout-layout">
+    <div>
+      <div class="form-card">
+        <h3><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> اطلاعات گیرنده</h3>
+        <div class="form-grid">
+          <div class="form-field"><label>نام</label><input type="text" id="fFirstName" placeholder="نام"></div>
+          <div class="form-field"><label>نام خانوادگی</label><input type="text" id="fLastName" placeholder="نام خانوادگی"></div>
+          <div class="form-field"><label>شماره موبایل</label><input type="tel" id="fPhone" placeholder="۰۹۱۲۳۴۵۶۷۸۹"></div>
+          <div class="form-field"><label>ایمیل (اختیاری)</label><input type="email" id="fEmail" placeholder="you@email.com"></div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <h3><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg> آدرس تحویل</h3>
+        <div class="form-grid">
+          <div class="form-field"><label>استان</label>
+            <select id="fProvince">
+              <option>تهران</option><option>البرز</option><option>آذربایجان شرقی</option><option>آذربایجان غربی</option>
+              <option>اردبیل</option><option>اصفهان</option><option>ایلام</option><option>بوشهر</option>
+              <option>چهارمحال و بختیاری</option><option>خراسان جنوبی</option><option>خراسان رضوی</option><option>خراسان شمالی</option>
+              <option>خوزستان</option><option>زنجان</option><option>سمنان</option><option>سیستان و بلوچستان</option>
+              <option>فارس</option><option>قزوین</option><option>قم</option><option>کردستان</option>
+              <option>کرمان</option><option>کرمانشاه</option><option>کهگیلویه و بویراحمد</option><option>گلستان</option>
+              <option>گیلان</option><option>لرستان</option><option>مازندران</option><option>مرکزی</option>
+              <option>هرمزگان</option><option>همدان</option><option>یزد</option>
+            </select>
+          </div>
+          <div class="form-field"><label>شهر</label><input type="text" id="fCity" placeholder="شهر"></div>
+          <div class="form-field full"><label>آدرس کامل</label><textarea id="fAddress" placeholder="خیابان، کوچه، پلاک، واحد"></textarea></div>
+          <div class="form-field"><label>کد پستی</label><input type="text" id="fPostalCode" placeholder="۱۲۳۴۵۶۷۸۹۰"></div>
+        </div>
+      </div>
+      <p id="formError" style="display:none;color:#FF6B81;font-size:13px;margin:-8px 0 16px;"></p>
+
+      <div class="form-card">
+        <h3><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg> روش پرداخت</h3>
+        <div class="pay-options">
+          <div class="pay-opt selected" data-pay="gateway">
+            <div class="radio"></div>
+            <div class="pay-info"><strong>پرداخت آنلاین (درگاه بانکی)</strong><span>پرداخت امن با کارت‌های عضو شتاب</span></div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <aside class="summary">
+      <h3>خلاصه‌ی سفارش</h3>
+      <div class="mini-items" id="miniItems"></div>
+
+      <div class="summary-row"><span>جمع اقلام</span><span id="sumSubtotal">۰ ت</span></div>
+      <div class="summary-row"><span>هزینه‌ی ارسال</span><span>رایگان</span></div>
+      <div class="summary-row discount" id="sumDiscountRow" style="display:none;color:var(--teal);"><span>تخفیف کد</span><span id="sumDiscount">۰ ت</span></div>
+      <div class="summary-row total"><span>مبلغ نهایی</span><span id="sumTotal">۰ ت</span></div>
+
+      <button class="place-order-btn" id="placeOrderBtn">ثبت نهایی سفارش</button>
+    </aside>
+  </div>
+</div>
+
+<div class="success-overlay" id="successOverlay">
+  <div class="success-modal">
+    <div class="success-icon">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <h2>سفارشت ثبت شد 🎉</h2>
+    <p>شماره‌ی سفارش: <strong style="color:var(--ink)" id="orderNumberLabel">—</strong><br>پیامک تایید به شماره‌ی موبایلت ارسال می‌شه.</p>
+    <a href="index.html">بازگشت به فروشگاه</a>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script>
+  let selectedPayMethod = 'gateway';
+  document.querySelectorAll('.pay-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('.pay-opt').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      selectedPayMethod = opt.dataset.pay;
+    });
+  });
+
+  const fmt = n => Math.round(n).toLocaleString('fa-IR') + ' ت';
+
+  // ---------------- خلاصه‌ی سفارش از سبد خرید واقعی ----------------
+  async function loadSummary(){
+    try {
+      const cart = await getCart();
+      const wrap = document.getElementById('miniItems');
+      wrap.innerHTML = cart.items.map(item => `
+        <div class="mini-item">
+          <div class="mini-thumb" style="background:linear-gradient(150deg,${gradFor(item.productId)});"><span class="qty-badge">${toFa(item.qty)}</span></div>
+          <div class="mini-info"><h4>${item.name}</h4><span>${fmt(item.lineTotal)}</span></div>
+        </div>
+      `).join('');
+
+      document.getElementById('sumSubtotal').textContent = fmt(cart.subtotal);
+      document.getElementById('sumTotal').textContent = fmt(cart.total);
+      const discountRow = document.getElementById('sumDiscountRow');
+      if (cart.discount > 0){
+        discountRow.style.display = 'flex';
+        document.getElementById('sumDiscount').textContent = '−' + fmt(cart.discount);
+      }
+
+      const placeBtn = document.getElementById('placeOrderBtn');
+      if (cart.items.length === 0){
+        placeBtn.disabled = true;
+        placeBtn.textContent = 'سبد خریدت خالیه';
+      }
+    } catch (err) {
+      console.error(err);
+      document.getElementById('formError').textContent = `اتصال به سرور برقرار نشد. مطمئن شو بک‌اند روی ${API_BASE} در حال اجراست.`;
+      document.getElementById('formError').style.display = 'block';
+    }
+  }
+  loadSummary();
+
+  // ---------------- ثبت نهایی سفارش ----------------
+  document.getElementById('placeOrderBtn').addEventListener('click', async () => {
+    const errEl = document.getElementById('formError');
+    errEl.style.display = 'none';
+
+    const customer = {
+      firstName: document.getElementById('fFirstName').value.trim(),
+      lastName: document.getElementById('fLastName').value.trim(),
+      phone: document.getElementById('fPhone').value.trim(),
+      email: document.getElementById('fEmail').value.trim(),
+    };
+    const address = {
+      province: document.getElementById('fProvince').value,
+      city: document.getElementById('fCity').value.trim(),
+      fullAddress: document.getElementById('fAddress').value.trim(),
+      postalCode: document.getElementById('fPostalCode').value.trim(),
+    };
+
+    if (!customer.firstName || !customer.lastName || !customer.phone) {
+      errEl.textContent = 'لطفاً نام، نام خانوادگی و شماره موبایل رو کامل کن.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (!address.city || !address.fullAddress) {
+      errEl.textContent = 'لطفاً شهر و آدرس کامل رو وارد کن.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    const btn = document.getElementById('placeOrderBtn');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'در حال ثبت سفارش...';
+
+    try {
+      const order = await placeOrder({ customer, address, paymentMethod: selectedPayMethod });
+      document.getElementById('orderNumberLabel').textContent = order.orderNumber;
+      document.getElementById('successOverlay').classList.add('show');
+      refreshCartBadge();
+    } catch (err) {
+      errEl.textContent = err.message || 'ثبت سفارش با خطا مواجه شد. دوباره تلاش کن.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سرویس چینی ۱۲ نفره سپید | ZOROUFE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F6FB; --bg-soft:#FFFFFF; --ink:#2B2A33; --ink-soft:#6B6875;
+    --violet:#8B6CF2; --blue:#4E9CFF; --teal:#3EE0C4;
+    --glass:rgba(0,0,0,0.04); --glass-border:rgba(0,0,0,0.1);
+    --line:rgba(0,0,0,0.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;position:relative;}
+  a{text-decoration:none;color:inherit;} ul{list-style:none;} button{font-family:inherit;border:none;background:none;cursor:pointer;}
+
+  .orb-field{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+  .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.4;}
+  .orb-1{width:460px;height:460px;background:radial-gradient(circle,var(--violet),transparent 70%);top:-12%;right:-10%;}
+  .orb-2{width:400px;height:400px;background:radial-gradient(circle,var(--teal),transparent 70%);bottom:-10%;left:-12%;}
+
+  header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.78);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);}
+  .nav-wrap{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;}
+  .logo{font-size:20px;font-weight:800;display:flex;align-items:center;gap:9px;}
+  .logo-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--blue));box-shadow:0 0 14px var(--violet);}
+  .logo-text{display:flex;flex-direction:column;line-height:1;gap:3px;}
+  .logo-main{font-size:19px;font-weight:800;letter-spacing:-0.01em;}
+  .logo-sub{font-size:9px;font-weight:600;letter-spacing:0.32em;color:var(--ink-soft);}
+  nav ul{display:flex;gap:34px;font-size:14.5px;font-weight:500;color:var(--ink-soft);}
+  .nav-actions{display:flex;align-items:center;gap:14px;}
+  .icon-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink);position:relative;}
+  .cart-count{position:absolute;top:0;left:0;background:var(--blue);color:#08080A;font-size:9px;font-weight:800;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .burger{display:none;width:38px;height:38px;align-items:center;justify-content:center;flex-direction:column;gap:5px;}
+  .burger span{width:20px;height:1.5px;background:var(--ink);}
+  .mobile-panel{position:fixed;top:70px;left:0;right:0;max-height:0;overflow:hidden;transition:max-height .4s ease;background:rgba(255,255,255,0.96);backdrop-filter:blur(20px);z-index:99;}
+  .mobile-panel.open{max-height:280px;border-bottom:1px solid var(--line);}
+  .mobile-panel ul{display:flex;flex-direction:column;padding:20px 32px;gap:20px;font-size:16px;font-weight:600;}
+
+  .page-wrap{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:32px 40px 100px;}
+  .breadcrumb{font-size:13px;color:var(--ink-soft);margin-bottom:30px;}
+  .breadcrumb .sep{margin:0 8px;opacity:0.5;}
+  .breadcrumb a:hover{color:var(--ink);}
+
+  .product-layout{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-bottom:100px;}
+
+  /* gallery */
+  .gallery-main{position:relative;aspect-ratio:1/1;border-radius:26px;overflow:hidden;margin-bottom:16px;background:linear-gradient(150deg,#8B6CF2,#3B2E7A);}
+  .gallery-main .badge{position:absolute;top:18px;right:18px;font-size:12px;font-weight:700;color:var(--teal);padding:8px 16px;border-radius:100px;background:rgba(255,255,255,0.55);backdrop-filter:blur(6px);border:1px solid var(--glass-border);}
+  .gallery-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  .thumb{aspect-ratio:1/1;border-radius:14px;cursor:pointer;border:2px solid transparent;transition:border-color .25s ease;}
+  .thumb.active{border-color:var(--blue);}
+  .thumb-1{background:linear-gradient(150deg,#8B6CF2,#3B2E7A);}
+  .thumb-2{background:linear-gradient(150deg,#4E9CFF,#1F4E8C);}
+  .thumb-3{background:linear-gradient(150deg,#3EE0C4,#12766A);}
+  .thumb-4{background:linear-gradient(150deg,#F2C94C,#8C6A1A);}
+
+  /* info */
+  .prod-info .cat-tag{font-size:13px;font-weight:600;color:var(--blue);margin-bottom:14px;display:block;}
+  .prod-info h1{font-size:clamp(26px,3vw,36px);font-weight:800;line-height:1.35;letter-spacing:-0.01em;margin-bottom:16px;}
+  .rating-row{display:flex;align-items:center;gap:12px;margin-bottom:26px;}
+  .rating-row .stars{color:#F2C94C;font-size:14px;letter-spacing:2px;}
+  .rating-row span{font-size:13.5px;color:var(--ink-soft);}
+  .rating-row .divider{width:1px;height:14px;background:var(--line);}
+
+  .price-row{display:flex;align-items:baseline;gap:14px;margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid var(--line);}
+  .price-row strong{font-size:32px;font-weight:900;letter-spacing:-0.02em;}
+  .price-row del{font-size:16px;color:var(--ink-soft);opacity:0.6;}
+  .price-row .save{font-size:12.5px;font-weight:700;color:var(--teal);padding:5px 12px;border-radius:100px;background:rgba(62,224,196,0.12);}
+
+  .prod-desc{font-size:15px;line-height:1.9;color:var(--ink-soft);margin-bottom:30px;}
+
+  .option-block{margin-bottom:26px;}
+  .option-block h4{font-size:13.5px;font-weight:700;margin-bottom:12px;}
+  .color-opts{display:flex;gap:10px;}
+  .color-opt{width:36px;height:36px;border-radius:50%;cursor:pointer;border:2px solid transparent;position:relative;transition:border-color .2s ease;}
+  .color-opt.active{border-color:var(--ink);}
+  .color-opt.active::after{content:"";position:absolute;inset:4px;border-radius:50%;border:2px solid var(--bg);}
+
+  .size-opts{display:flex;gap:10px;flex-wrap:wrap;}
+  .size-opt{padding:10px 18px;border-radius:12px;border:1px solid var(--glass-border);background:var(--glass);font-size:13.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:all .2s ease;}
+  .size-opt.active{color:#08080A;background:linear-gradient(100deg,var(--teal),var(--blue));border-color:transparent;}
+
+  .qty-cart-row{display:flex;gap:14px;margin-bottom:24px;}
+  .qty-box{display:flex;align-items:center;border:1px solid var(--glass-border);border-radius:14px;overflow:hidden;background:var(--glass);}
+  .qty-box button{width:44px;height:52px;font-size:18px;color:var(--ink-soft);transition:color .2s;}
+  .qty-box button:hover{color:var(--ink);}
+  .qty-box span{width:44px;text-align:center;font-weight:700;font-size:15px;}
+  .add-cart-btn{
+    flex:1;border-radius:14px;font-size:15px;font-weight:800;color:#08080A;
+    background:linear-gradient(100deg,var(--teal),var(--blue),var(--violet));background-size:200% 100%;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    transition:background-position .5s ease,transform .25s ease;box-shadow:0 0 34px -10px rgba(78,156,255,0.5);
+  }
+  .add-cart-btn:hover{background-position:100% 0;transform:translateY(-2px);}
+  .wish-btn-lg{width:52px;height:52px;border-radius:14px;border:1px solid var(--glass-border);background:var(--glass);display:flex;align-items:center;justify-content:center;color:var(--ink);transition:color .25s ease;}
+  .wish-btn-lg.active{color:#FF6B81;}
+
+  .trust-row{display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:16px;background:var(--glass);border:1px solid var(--glass-border);}
+  .trust-row div{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--ink-soft);}
+  .trust-row svg{color:var(--teal);flex-shrink:0;}
+
+  /* tabs */
+  .tabs-section{margin-bottom:100px;}
+  .tab-heads{display:flex;gap:8px;border-bottom:1px solid var(--line);margin-bottom:32px;overflow-x:auto;}
+  .tab-head{padding:14px 22px;font-size:14.5px;font-weight:600;color:var(--ink-soft);white-space:nowrap;position:relative;}
+  .tab-head.active{color:var(--ink);}
+  .tab-head.active::after{content:"";position:absolute;bottom:-1px;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--teal),var(--blue));}
+  .tab-panel{display:none;font-size:15px;line-height:1.9;color:var(--ink-soft);max-width:760px;}
+  .tab-panel.active{display:block;}
+  .spec-table{width:100%;border-collapse:collapse;max-width:600px;}
+  .spec-table tr{border-bottom:1px solid var(--line);}
+  .spec-table td{padding:14px 0;font-size:14px;}
+  .spec-table td:first-child{color:var(--ink-soft);width:40%;}
+  .spec-table td:last-child{font-weight:600;}
+
+  /* related */
+  .related h2{font-size:clamp(24px,2.8vw,32px);font-weight:800;margin-bottom:32px;}
+  .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  .prod-card{border-radius:20px;border:1px solid var(--glass-border);background:var(--glass);overflow:hidden;transition:border-color .3s ease;}
+  .prod-card:hover{border-color:rgba(255,255,255,0.24);}
+  .prod-media{position:relative;aspect-ratio:1/1;overflow:hidden;}
+  .prod-body{padding:16px;}
+  .prod-body span{font-size:11px;color:var(--ink-soft);font-weight:600;display:block;margin-bottom:5px;}
+  .prod-body h3{font-size:14px;font-weight:700;margin-bottom:8px;}
+  .prod-body strong{font-size:14.5px;font-weight:800;}
+
+  @media(max-width:1024px){
+    .product-layout{grid-template-columns:1fr;gap:36px;}
+    .prod-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media(max-width:768px){
+    nav,.nav-actions .cta-btn{display:none;}
+    .burger{display:flex;}
+    .nav-wrap{padding:16px 20px;}
+    .page-wrap{padding:24px 20px 70px;}
+    .qty-cart-row{flex-wrap:wrap;}
+    .qty-box{order:2;}
+    .add-cart-btn{order:1;width:100%;}
+  }
+  .search-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:90px 20px;}
+  .search-overlay.show{display:flex;}
+  .search-box{width:100%;max-width:560px;background:var(--bg-soft);border:1px solid var(--glass-border);border-radius:20px;padding:8px 8px 8px 18px;display:flex;align-items:center;gap:12px;color:var(--ink-soft);}
+  .search-box input{flex:1;background:none;border:none;outline:none;color:var(--ink);font-family:inherit;font-size:15px;padding:12px 4px;}
+  .search-box button.search-close{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);flex-shrink:0;transition:background .2s ease;}
+  .search-box button.search-close:hover{background:rgba(255,255,255,0.08);}
+
+  :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:8px;}
+</style>
+</head>
+<body>
+
+<div class="orb-field"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+
+<header>
+  <div class="nav-wrap">
+    <a href="index.html" class="logo"><span class="logo-dot"></span><span class="logo-text"><span class="logo-main">ZOROUFE</span><span class="logo-sub">LUXE</span></span></a>
+    <nav><ul>
+      <li><a href="index.html">خانه</a></li>
+      <li><a href="04-product-listing.html">دسته‌بندی‌ها</a></li>
+      <li><a href="04-product-listing.html">برندها</a></li>
+      <li><a href="04-product-listing.html?discount=1">تخفیف‌ها</a></li>
+      <li><a href="#">تماس</a></li>
+    </ul></nav>
+    <div class="nav-actions">
+      <button type="button" class="icon-btn" id="searchBtn" aria-label="جستجو"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      <a href="16-wishlist.html" class="icon-btn" aria-label="علاقه‌مندی‌های من"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.6-10-9.2C.5 8 2 4.5 5.6 4c2.2-.3 4 .9 6.4 3.4C14.4 4.9 16.2 3.7 18.4 4c3.6.5 5.1 4 3.6 7.8-2.5 4.6-10 9.2-10 9.2z"/></svg></a>
+        <a href="15-login.html" id="accountBtn" class="icon-btn" aria-label="حساب کاربری"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+        <a href="06-cart.html" class="icon-btn" aria-label="سبد خرید"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg><span class="cart-count" id="cartCount">3</span></a>
+      <button class="burger" id="burgerBtn"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-panel" id="mobilePanel">
+    <ul><li><a href="index.html">خانه</a></li><li><a href="04-product-listing.html">دسته‌بندی‌ها</a></li><li><a href="04-product-listing.html">برندها</a></li><li><a href="04-product-listing.html?discount=1">تخفیف‌ها</a></li></ul>
+  </div>
+</header>
+
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    <input type="text" id="searchInput" placeholder="دنبال چی می‌گردی؟">
+    <button class="search-close" id="searchClose" aria-label="بستن جستجو">✕</button>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div class="breadcrumb">
+    <a href="index.html">خانه</a><span class="sep">/</span><a href="04-product-listing.html">ظروف و آشپزخانه</a><span class="sep">/</span><span style="color:var(--ink)">سرویس چینی ۱۲ نفره</span>
+  </div>
+
+  <div class="product-layout">
+    <div class="gallery">
+      <div class="gallery-main" id="galleryMain"><span class="badge">٪۲۰ تخفیف</span></div>
+      <div class="gallery-thumbs">
+        <div class="thumb thumb-1 active" data-grad="150deg,#8B6CF2,#3B2E7A"></div>
+        <div class="thumb thumb-2" data-grad="150deg,#4E9CFF,#1F4E8C"></div>
+        <div class="thumb thumb-3" data-grad="150deg,#3EE0C4,#12766A"></div>
+        <div class="thumb thumb-4" data-grad="150deg,#F2C94C,#8C6A1A"></div>
+      </div>
+    </div>
+
+    <div class="prod-info">
+      <span class="cat-tag">ظروف چینی و سرامیک</span>
+      <h1>سرویس چینی ۱۲ نفره سپید، طرح مینیمال</h1>
+      <div class="rating-row">
+        <span class="stars">★★★★★</span>
+        <span>۴.۸ از ۵ (۱۲۴ نظر)</span>
+        <span class="divider"></span>
+        <span>۳۲۰+ فروش</span>
+      </div>
+
+      <div class="price-row">
+        <strong>۴٬۲۰۰٬۰۰۰ ت</strong>
+        <del>۵٬۲۵۰٬۰۰۰ ت</del>
+        <span class="save">۱٬۰۵۰٬۰۰۰ ت صرفه‌جویی</span>
+      </div>
+
+      <p class="prod-desc">سرویس ۱۲ نفره‌ی چینی با طرح مینیمال سپید، مناسب برای میزهای روزمره و مهمانی. مقاوم در برابر ماکروویو و ماشین ظرفشویی، با لبه‌های صیقلی که ماندگاری بالایی دارن.</p>
+
+      <div class="option-block">
+        <h4>رنگ</h4>
+        <div class="color-opts">
+          <div class="color-opt active" style="background:#F5F5F5;"></div>
+          <div class="color-opt" style="background:#2B2622;"></div>
+          <div class="color-opt" style="background:#8B6CF2;"></div>
+          <div class="color-opt" style="background:#C9A24A;"></div>
+        </div>
+      </div>
+
+      <div class="option-block">
+        <h4>تعداد سرویس</h4>
+        <div class="size-opts">
+          <button class="size-opt">۶ نفره</button>
+          <button class="size-opt active">۱۲ نفره</button>
+          <button class="size-opt">۲۴ نفره</button>
+        </div>
+      </div>
+
+      <div class="qty-cart-row">
+        <div class="qty-box">
+          <button id="qtyMinus">−</button>
+          <span id="qtyVal">۱</span>
+          <button id="qtyPlus">+</button>
+        </div>
+        <button class="add-cart-btn" id="addCartBtn">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+          <span id="addCartLabel">افزودن به سبد خرید</span>
+        </button>
+        <button class="wish-btn-lg" id="wishBtnLg" aria-label="علاقه‌مندی"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.6-10-9.2C.5 8 2 4.5 5.6 4c2.2-.3 4 .9 6.4 3.4C14.4 4.9 16.2 3.7 18.4 4c3.6.5 5.1 4 3.6 7.8-2.5 4.6-10 9.2-10 9.2z"/></svg></button>
+      </div>
+
+      <div class="trust-row">
+        <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> ارسال رایگان برای خریدهای بالای 70 میلیون تومان</div>
+        <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg> ۷ روز ضمانت بازگشت کالا</div>
+        <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> گارانتی اصالت کالا</div>
+      </div>
+    </div>
+  </div>
+
+  <section class="tabs-section">
+    <div class="tab-heads">
+      <button class="tab-head active" data-tab="desc">توضیحات کامل</button>
+      <button class="tab-head" data-tab="specs">مشخصات فنی</button>
+     
+    </div>
+
+    <div class="tab-panel active" id="tab-desc">
+      <p>این سرویس چینی ۱۲ نفره با طراحی مینیمال، برای کسایی ساخته شده که ترجیح می‌دن خط و رنگ ساده باشه ولی حس کیفیت رو منتقل کنه. جنس چینی درجه‌یک، مقاوم در برابر ترک‌خوردگی و شوک حرارتی، برای استفاده‌ی روزمره و پذیرایی‌های رسمی مناسبه. شامل بشقاب بزرگ، بشقاب خورشت، بشقاب دسر، و کاسه‌ی سوپ به تعداد نفرات انتخابی.</p>
+    </div>
+
+    <div class="tab-panel" id="tab-specs">
+      <table class="spec-table">
+        <tr><td>جنس</td><td>چینی درجه یک</td></tr>
+        <tr><td>تعداد پارچه</td><td>۶۸ پارچه (۱۲ نفره)</td></tr>
+        <tr><td>مناسب ماکروویو</td><td>بله</td></tr>
+        <tr><td>مناسب ماشین ظرفشویی</td><td>بله</td></tr>
+        <tr><td>کشور سازنده</td><td>ایران</td></tr>
+        <tr><td>گارانتی</td><td>۱۲ ماهه اصالت و سلامت فیزیکی</td></tr>
+      </table>
+    </div>
+
+   
+  </section>
+
+  <section class="related">
+    <h2>محصولات مشابه</h2>
+       <div class="prod-grid" id="relatedGrid"></div>
+  </section>
+</div>
+
+<script src="api.js"></script>
+<script>
+  document.getElementById('burgerBtn').addEventListener('click', () => {
+    document.getElementById('mobilePanel').classList.toggle('open');
+  });
+
+  // ---------------- بارگذاری محصول واقعی از API ----------------
+  const productId = new URLSearchParams(window.location.search).get('id');
+  const galleryMain = document.getElementById('galleryMain');
+  let selectedColor = null, selectedSize = null;
+  let qty = 1;
+  const qtyVal = document.getElementById('qtyVal');
+
+  async function loadProduct() {
+    if (!productId) {
+      document.querySelector('.prod-info').innerHTML = '<p>محصولی انتخاب نشده. از <a href="04-product-listing.html">لیست محصولات</a> یکی رو انتخاب کن.</p>';
+      return;
+    }
+    let p;
+    try {
+      p = await getProduct(productId);
+    } catch (err) {
+      document.querySelector('.prod-info').innerHTML = `<p>محصول پیدا نشد یا اتصال به سرور برقرار نیست (<code>${API_BASE}</code>).</p>`;
+      return;
+    }
+
+    document.title = p.name + ' | ZOROUFE';
+        loadRelatedProducts(p.category, p.id);
+    document.querySelector('.cat-tag').textContent = p.subcategory;
+    document.querySelector('.prod-info h1').textContent = p.name;
+    document.querySelector('.rating-row').innerHTML = `
+      <span class="stars">${'★'.repeat(Math.round(p.rating))}${'☆'.repeat(5 - Math.round(p.rating))}</span>
+      <span>${p.rating} از ۵ (${toFa(p.reviewCount)} نظر)</span>
+      <span class="divider"></span>
+      <span>${toFa(p.soldCount)}+ فروش</span>
+    `;
+    document.querySelector('.price-row').innerHTML = `
+      <strong>${fmtPrice(p.price)}</strong>
+      ${p.oldPrice ? `<del>${fmtPrice(p.oldPrice)}</del><span class="save">${fmtPrice(p.oldPrice - p.price)} صرفه‌جویی</span>` : ''}
+    `;
+    document.querySelector('.prod-desc').textContent = p.description;
+    if (p.images && p.images.length > 0) {
+      galleryMain.style.backgroundImage = `url('${p.images[0]}')`;
+      galleryMain.style.backgroundSize = 'cover';
+      galleryMain.style.backgroundPosition = 'center';
+    } else {
+      galleryMain.style.background = `linear-gradient(${gradFor(p.id)})`;
+    }
+    galleryMain.querySelector('.badge')?.remove();
+    if (p.oldPrice) {
+      const badge = document.createElement('span');
+      badge.className = 'badge';
+      badge.textContent = `٪${Math.round((1 - p.price / p.oldPrice) * 100)} تخفیف`;
+      galleryMain.appendChild(badge);
+    }
+   const thumbsWrap = document.querySelector('.gallery-thumbs');
+    if (p.images && p.images.length > 0) {
+      thumbsWrap.innerHTML = p.images.map((img, i) => `
+        <div class="thumb ${i === 0 ? 'active' : ''}" style="background-image:url('${img}');background-size:cover;background-position:center;" data-img="${img}"></div>
+      `).join('');
+      thumbsWrap.style.display = p.images.length > 1 ? 'grid' : 'none';
+
+      thumbsWrap.querySelectorAll('.thumb').forEach(t => {
+        t.addEventListener('click', () => {
+          thumbsWrap.querySelectorAll('.thumb').forEach(x => x.classList.remove('active'));
+          t.classList.add('active');
+          galleryMain.style.backgroundImage = `url('${t.dataset.img}')`;
+          galleryMain.style.backgroundSize = 'cover';
+          galleryMain.style.backgroundPosition = 'center';
+        });
+      });
+    } else {
+      thumbsWrap.innerHTML = `
+        <div class="thumb thumb-1 active"></div>
+        <div class="thumb thumb-2"></div>
+        <div class="thumb thumb-3"></div>
+        <div class="thumb thumb-4"></div>
+      `;
+      thumbsWrap.style.display = 'grid';
+      document.querySelectorAll('.thumb').forEach((t, i) => { t.style.background = `linear-gradient(${gradFor(p.id + i)})`; });
+    }
+
+    // رنگ‌ها و سایزها - اگه محصول options نداره، اون بخش نمایش داده نشه
+    const colorBlock = document.querySelectorAll('.option-block')[0];
+    const sizeBlock = document.querySelectorAll('.option-block')[1];
+    if (p.options && p.options.colors && p.options.colors.length) {
+      colorBlock.style.display = '';
+      selectedColor = p.options.colors[0].name;
+      colorBlock.querySelector('.color-opts').innerHTML = p.options.colors.map((c, i) => `
+        <div class="color-opt ${i === 0 ? 'active' : ''}" style="background:${c.hex};" data-color="${c.name}"></div>
+      `).join('');
+    } else if (colorBlock) {
+      colorBlock.style.display = 'none';
+    }
+    if (p.options && p.options.sizes && p.options.sizes.length) {
+      sizeBlock.style.display = '';
+      selectedSize = p.options.sizes[0];
+      sizeBlock.querySelector('.size-opts').innerHTML = p.options.sizes.map((s, i) => `
+        <button class="size-opt ${i === 0 ? 'active' : ''}" data-size="${s}">${s}</button>
+      `).join('');
+    } else if (sizeBlock) {
+      sizeBlock.style.display = 'none';
+    }
+
+    // مشخصات فنی
+    const specsTable = document.querySelector('#tab-specs .spec-table');
+    specsTable.innerHTML = Object.entries(p.specs || {}).map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+    document.querySelector('#tab-desc p').textContent = p.description;
+
+    // رنگ / سایز کلیک (delegated روی خود بلوک چون هر بار innerHTML عوض می‌شه)
+    colorBlock?.addEventListener('click', (e) => {
+      const opt = e.target.closest('.color-opt');
+      if (!opt) return;
+      colorBlock.querySelectorAll('.color-opt').forEach(x => x.classList.remove('active'));
+      opt.classList.add('active');
+      selectedColor = opt.dataset.color;
+    });
+    sizeBlock?.addEventListener('click', (e) => {
+      const opt = e.target.closest('.size-opt');
+      if (!opt) return;
+      sizeBlock.querySelectorAll('.size-opt').forEach(x => x.classList.remove('active'));
+      opt.classList.add('active');
+      selectedSize = opt.dataset.size;
+    });
+
+    // افزودن به سبد - حالا واقعاً API رو صدا می‌زنه
+    const addCartLabel = document.getElementById('addCartLabel');
+    document.getElementById('addCartBtn').addEventListener('click', async () => {
+      addCartLabel.textContent = 'در حال افزودن...';
+      try {
+        await addToCart(p.id, qty, selectedColor, selectedSize);
+        addCartLabel.textContent = 'به سبد اضافه شد ✓';
+        refreshCartBadge();
+      } catch (err) {
+        addCartLabel.textContent = 'خطا در افزودن';
+      }
+      setTimeout(() => addCartLabel.textContent = 'افزودن به سبد خرید', 1800);
+    });
+  }
+  loadProduct();
+  async function loadRelatedProducts(category, currentId) {
+    const grid = document.getElementById('relatedGrid');
+    if (!grid) return;
+    try {
+      const res = await getProducts({ cat: category });
+      const related = (res.products || []).filter(p => p.id !== currentId).slice(0, 4);
+      if (related.length === 0) {
+        document.querySelector('.related').style.display = 'none';
+        return;
+      }
+      grid.innerHTML = related.map(p => `
+        <article class="prod-card">
+          <a href="05-product-detail.html?id=${p.id}" class="prod-media" style="display:block;">
+            <div style="position:absolute;inset:0;${p.images && p.images.length ? `background-image:url('${p.images[0]}');background-size:cover;background-position:center;` : `background:linear-gradient(${gradFor(p.id)});`}"></div>
+          </a>
+          <div class="prod-body">
+            <span>${p.subcategory || ''}</span>
+            <h3><a href="05-product-detail.html?id=${p.id}">${p.name}</a></h3>
+            <strong>${fmtPrice(p.price)}</strong>
+          </div>
+        </article>
+      `).join('');
+    } catch (err) { /* بی‌سروصدا رد شو */ }
+  }
+  // quantity
+  document.getElementById('qtyPlus').addEventListener('click', () => { qty++; qtyVal.textContent = qty.toLocaleString('fa-IR'); });
+  document.getElementById('qtyMinus').addEventListener('click', () => { if(qty>1){ qty--; qtyVal.textContent = qty.toLocaleString('fa-IR'); } });
+
+  document.getElementById('wishBtnLg').addEventListener('click', async function(){
+    if (!isLoggedIn()) { window.location.href = '15-login.html'; return; }
+    try {
+      if (this.classList.contains('active')) {
+        await removeFromWishlist(p.id);
+        this.classList.remove('active');
+      } else {
+        await addToWishlist(p.id);
+        this.classList.add('active');
+      }
+    } catch (err) { alert(err.message || 'خطا در بروزرسانی علاقه‌مندی‌ها'); }
+  });
+  // tabs
+  document.querySelectorAll('.tab-head').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab-head').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+  // search overlay
+  const searchBtn = document.getElementById('searchBtn');
+  const searchOverlay = document.getElementById('searchOverlay');
+  const searchInput = document.getElementById('searchInput');
+  const searchClose = document.getElementById('searchClose');
+  searchBtn.addEventListener('click', () => {
+    searchOverlay.classList.add('show');
+    searchInput.focus();
+  });
+  searchClose.addEventListener('click', () => searchOverlay.classList.remove('show'));
+  searchOverlay.addEventListener('click', (e) => { if (e.target === searchOverlay) searchOverlay.classList.remove('show'); });
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && searchInput.value.trim()){
+      window.location.href = '04-product-listing.html?search=' + encodeURIComponent(searchInput.value.trim());
+    }
+  });
+</script>
+</body>
+</html>
