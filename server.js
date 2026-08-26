@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 
 const productsRouter = require('./routes/products');
 const categoriesRouter = require('./routes/categories');
@@ -28,9 +29,22 @@ app.use('/api/settings', settingsRouter);
 app.use('/api/user-auth', userAuthRouter);
 app.use('/api/wishlist', wishlistRouter);
 app.use('/api/contact', contactRouter);
-app.use('/uploads', express.static(require('path').join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+
+// جلوگیری از دسترسی مستقیم به فایل‌ها و پوشه‌های حساس بک‌اند
+app.use((req, res, next) => {
+  const blockedPaths = ['/server.js', '/package.json', '/package-lock.json'];
+  const blockedPrefixes = ['/routes', '/middleware', '/utils', '/data', '/node_modules', '/.git'];
+  if (blockedPaths.includes(req.path) || blockedPrefixes.some(p => req.path.startsWith(p))) {
+    return res.status(404).send('Not found');
+  }
+  next();
+});
+
+// سرو کردن فایل‌های فرانت‌اند (index.html و بقیه‌ی صفحات)
+app.use(express.static(path.join(__dirname)));
 
 // مدیریت خطاهای پیش‌بینی‌نشده
 app.use((err, req, res, next) => {
