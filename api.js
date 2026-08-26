@@ -5,7 +5,7 @@
 // ===================================================================
 
 // آدرس بک‌اند - موقع دیپلوی روی سرور واقعی این خط رو عوض کن
-const API_BASE = 'http://localhost:4000/api';
+const API_BASE = window.location.origin + '/api';
 
 // -------------------- ابزارهای فرمت --------------------
 const toFa = (n) => Number(n).toLocaleString('fa-IR');
