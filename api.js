@@ -188,8 +188,7 @@ async function adminUploadImage(file) {
   let data = null;
   try { data = await res.json(); } catch (_) {}
   if (!res.ok) throw new Error((data && data.error) || 'آپلود عکس با خطا مواجه شد');
-  const backendOrigin = API_BASE.replace(/\/api$/, '');
-  return backendOrigin + data.url;
+  return data.url;
 }
 
 async function adminUploadImages(files) {
