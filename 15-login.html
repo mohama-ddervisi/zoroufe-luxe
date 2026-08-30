@@ -14,7 +14,8 @@
     --glass:rgba(0,0,0,0.04); --glass-border:rgba(0,0,0,0.1);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  html,body{height:100%;}
+body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--ink);display:flex;align-items:center;justify-content:center;position:fixed;inset:0;overflow-y:auto;}
   a{color:inherit;} input{font-family:inherit;}
   .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.35;}
   .orb-1{width:440px;height:440px;background:radial-gradient(circle,var(--violet),transparent 70%);top:-12%;right:-10%;}
