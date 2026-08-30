@@ -460,11 +460,38 @@
   .search-box button.search-close:hover{background:rgba(255,255,255,0.08);}
 
   :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:8px;}
-  
+  .announce-bar{
+  position:relative;z-index:101;overflow:hidden;
+  background:linear-gradient(100deg,var(--violet),var(--blue),var(--teal));
+  padding:8px 0;
+}
+.announce-track{
+  display:flex;gap:48px;width:max-content;
+  animation:announceScroll 22s linear infinite;
+}
+.announce-track span{
+  font-size:12.5px;font-weight:600;color:#08080A;white-space:nowrap;
+}
+@keyframes announceScroll{
+  from{transform:translateX(0);}
+  to{transform:translateX(-50%);}
+}
+@media(prefers-reduced-motion:reduce){ .announce-track{animation:none;} }
 </style>
 </head>
 <body>
-
+<div class="announce-bar">
+  <div class="announce-track">
+    <span>🚚 ارسال رایگان برای خریدهای بالای ۲,۰۰۰,۰۰۰ تومان</span>
+    <span>🎁 تخفیف ۱۰٪ برای اولین خرید با کد WELCOME</span>
+    <span>⭐ بیش از ۲۰۰ برند منتخب در یک فروشگاه</span>
+    <span>📦 ضمانت اصالت کالا و ۷ روز مهلت بازگشت</span>
+    <span>🚚 ارسال رایگان برای خریدهای بالای ۲,۰۰۰,۰۰۰ تومان</span>
+    <span>🎁 تخفیف ۱۰٪ برای اولین خرید با کد WELCOME</span>
+    <span>⭐ بیش از ۲۰۰ برند منتخب در یک فروشگاه</span>
+    <span>📦 ضمانت اصالت کالا و ۷ روز مهلت بازگشت</span>
+  </div>
+</div>
 <div class="orb-field">
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
