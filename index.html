@@ -157,7 +157,10 @@
   .marquee-wrap{position:relative;z-index:1;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:26px 0;overflow:hidden;background:rgba(255,255,255,0.02);}
   .marquee{display:flex;gap:64px;width:max-content;animation:scrollLeft 26s linear infinite;}
   .marquee span{font-size:15px;font-weight:600;color:var(--ink-soft);letter-spacing:0.02em;white-space:nowrap;}
-  @keyframes scrollLeft{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @keyframes scrollLeft{
+  from{transform:translateX(100%);}
+  to{transform:translateX(-100%);}
+}
   @media(prefers-reduced-motion:reduce){.marquee{animation:none;}}
 
   /* ---------- categories ---------- */
@@ -469,9 +472,14 @@
   transform:translateZ(0);
 }
  
+.announce-track{
+  display:flex;gap:48px;width:max-content;
+  animation:announceScroll 18s linear infinite;
+}
 .announce-track span{
   font-size:12.5px;font-weight:600;color:#08080A;white-space:nowrap;
 }
+
 @keyframes announceScroll{
   from{transform:translateX(100%);}
   to{transform:translateX(-100%);}
@@ -554,7 +562,7 @@
 
 <div class="marquee-wrap">
   <div class="marquee" id="marquee">
-    <span>کاراجا</span><span>پاشا باغچه</span><span>میس بتی</span><span>دلی گلس</span><span>شاهین</span><span>آرو</span><span>لیمون</span>
+
     <span>کارجا</span><span>پاشا باغچه</span><span>میس بتی</span><span>دلی گلس</span><span>شاهین</span><span>آرو</span><span>لیمون</span>
     
   </div>
@@ -950,53 +958,7 @@
       loadPopularProducts(pill.dataset.cat);
     });
   });
-function setupSeamlessMarquee(trackEl, speedPxPerSec = 60){
-  // محتوای اصلی رو یه بار کپی می‌کنیم تا مطمئن بشیم دقیقاً دو نسخه‌ی برابر داریم
-  const originalHTML = trackEl.innerHTML;
-  trackEl.innerHTML = originalHTML + originalHTML; // دو نسخه دقیقاً برابر
 
-  let pos = 0;
-  let halfWidth = 0;
-
-  function measure(){
-    halfWidth = trackEl.scrollWidth / 2;
-  }
-  measure();
-  window.addEventListener('resize', measure);
-
-  let last = performance.now();
-  function tick(now){
-    const dt = (now - last) / 1000;
-    last = now;
-    pos -= speedPxPerSec * dt;
-    if (Math.abs(pos) >= halfWidth) pos += halfWidth; // بدون پرش، دقیقاً سر جاش
-    trackEl.style.transform = `translateX(${pos}px)`;
-    requestAnimationFrame(tick);
-  }
-
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    requestAnimationFrame(tick);
-  }
-}
-
-// نوار بالای سایت
-const announceTrack = document.querySelector('.announce-track');
-if (announceTrack){
-  // محتوای تکراری قبلی رو پاک کن، فقط یه ست نگه دار
-  const items = Array.from(announceTrack.children).slice(0, 4); // ۴ تا آیتم اصلی
-  announceTrack.innerHTML = '';
-  items.forEach(i => announceTrack.appendChild(i));
-  setupSeamlessMarquee(announceTrack, 55);
-}
-
-// ردیف برندها (marquee پایین‌تر)
-const brandMarquee = document.getElementById('marquee');
-if (brandMarquee){
-  const items = Array.from(brandMarquee.children).slice(0, 7); // ۷ تا برند اصلی
-  brandMarquee.innerHTML = '';
-  items.forEach(i => brandMarquee.appendChild(i));
-  setupSeamlessMarquee(brandMarquee, 45);
-}
   loadPopularProducts();
 </script>
 </body>
