@@ -67,6 +67,7 @@
   .hero.has-bg::before{
     content:"";position:absolute;top:0;bottom:0;left:50%;right:50%;
     width:100vw;margin-left:-50vw;margin-right:-50vw;
+    background-image:var(--hero-bg-url);
     background-size:cover;background-position:center 30%;
     z-index:-2;
   }
@@ -490,6 +491,22 @@
 <div class="announce-bar">
   <div class="announce-track">
     <span>🚚 ارسال رایگان برای خریدهای بالای ۲,۰۰۰,۰۰۰ تومان</span>
+    <span>🎁 تخفیف ۱۰٪ برای اولین خرید با کد WELCOME</span>
+    <span>⭐ بیش از ۲۰۰ برند منتخب در یک فروشگاه</span>
+    <span>📦 ضمانت اصالت کالا و ۷ روز مهلت بازگشت</span>
+    <span>🚚 ارسال رایگان برای خریدهای بالای ۲,۰۰۰,۰۰۰ تومان</span>
+    <span>🎁 تخفیف ۱۰٪ برای اولین خرید با کد WELCOME</span>
+    <span>⭐ بیش از ۲۰۰ برند منتخب در یک فروشگاه</span>
+    <span>📦 ضمانت اصالت کالا و ۷ روز مهلت بازگشت</span>
+     <span>🚚 ارسال رایگان برای خریدهای بالای ۲,۰۰۰,۰۰۰ تومان</span>
+    <span>🎁 تخفیف ۱۰٪ برای اولین خرید با کد WELCOME</span>
+    <span>⭐ بیش از ۲۰۰ برند منتخب در یک فروشگاه</span>
+    <span>📦 ضمانت اصالت کالا و ۷ روز مهلت بازگشت</span>
+    <span>🚚 ارسال رایگان برای خریدهای بالای ۲,۰۰۰,۰۰۰ تومان</span>
+    <span>🎁 تخفیف ۱۰٪ برای اولین خرید با کد WELCOME</span>
+    <span>⭐ بیش از ۲۰۰ برند منتخب در یک فروشگاه</span>
+    <span>📦 ضمانت اصالت کالا و ۷ روز مهلت بازگشت</span>
+        <span>🚚 ارسال رایگان برای خریدهای بالای ۲,۰۰۰,۰۰۰ تومان</span>
     <span>🎁 تخفیف ۱۰٪ برای اولین خرید با کد WELCOME</span>
     <span>⭐ بیش از ۲۰۰ برند منتخب در یک فروشگاه</span>
     <span>📦 ضمانت اصالت کالا و ۷ روز مهلت بازگشت</span>
@@ -952,18 +969,15 @@
   });
   // اگه ادمین عکس هیرو تنظیم کرده باشه، همونو پس‌زمینه بذار
   async function applyHeroBackground(){
-    try {
-      const settings = await getSettings();
-      if (settings.heroImage) {
-        const heroSection = document.getElementById('heroSection');
-heroSection.classList.add('has-bg');
-        // چون عکس رو ::before گذاشتیم نه خود بخش، باید با استایل جدا ست بشه
-        const styleTag = document.createElement('style');
-        styleTag.textContent = `#heroSection.has-bg::before{background-image:url('${settings.heroImage}');}`;
-        document.head.appendChild(styleTag);
-      }
-    } catch (err) { /* بی‌سروصدا رد شو */ }
-  }
+  try {
+    const settings = await getSettings();
+    if (settings.heroImage) {
+      const heroSection = document.getElementById('heroSection');
+      heroSection.classList.add('has-bg');
+      heroSection.style.setProperty('--hero-bg-url', `url('${settings.heroImage}')`);
+    }
+  } catch (err) { /* بی‌سروصدا رد شو */ }
+}
   applyHeroBackground();
  document.querySelectorAll('.filter-pills .pill').forEach(pill => {
     pill.addEventListener('click', () => {
