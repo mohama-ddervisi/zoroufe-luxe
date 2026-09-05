@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
     const wanted = brand.split(',');
     products = products.filter(p => wanted.includes(p.brand));
   }
-
+  
   if (minPrice) products = products.filter(p => p.price >= Number(minPrice));
   if (maxPrice) products = products.filter(p => p.price <= Number(maxPrice));
 
@@ -49,20 +49,20 @@ router.get('/', async (req, res) => {
   res.json({ count: totalCount, page, totalPages: Math.ceil(totalCount / limit), products: paginatedProducts });
 });
 
-// GET /api/products/:id
+// GET /api/products/:id                 
 router.get('/:id', async (req, res) => {
   const products = await readTable('products');
   const product = products.find(p => p.id === req.params.id);
   if (!product) return res.status(404).json({ error: 'محصول پیدا نشد' });
   res.json(product);
 });
-
+                                  
 // POST /api/products  (فقط ادمین)
 router.post('/', requireAdmin, async (req, res) => {
   const products = await readTable('products');
   const newProduct = {
     id: 'p-' + uuidv4().slice(0, 8),
-    name: req.body.name,
+name: req.body.name,
     category: req.body.category,
     subcategory: req.body.subcategory,
     brand: req.body.brand || null,

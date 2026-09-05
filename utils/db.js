@@ -52,5 +52,5 @@ async function writeTable(tableName, data) {
     await collection.insertMany(data);
   }
 }
-
+      
 module.exports = { readTable, writeTable, connectDB };

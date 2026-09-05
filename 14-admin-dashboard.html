@@ -487,7 +487,7 @@ try {
       msg.textContent = err.message || 'ذخیره‌سازی با خطا مواجه شد';
       msg.style.color = '#FF6B81';
       msg.style.display = 'block';
-    } finally {
+    } finally { 
       btn.disabled = false;
       btn.textContent = 'ذخیره‌ی عکس هیرو';
     }
@@ -537,7 +537,7 @@ try {
           </tbody>
         </table>
       `;
-
+         
       document.querySelectorAll('.mark-read-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
           try {
