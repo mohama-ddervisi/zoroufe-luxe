@@ -6,10 +6,10 @@ const api = Kavenegar.KavenegarApi({
 
 function sendSms(phone, code) {
   return new Promise((resolve, reject) => {
-    api.Send({
-      message: `کد تایید زوروفه: ${code}`,
-      sender: '10004346',
-      receptor: phone
+    api.VerifyLookup({
+      receptor: phone,
+      token: code,
+      template: 'zoroufeotp'
     }, function (response, status) {
       if (status === 200) {
         resolve(response);
