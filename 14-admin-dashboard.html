@@ -95,6 +95,7 @@
   <div class="tabs">
     <button class="tab-btn active" data-tab="products">محصولات</button>
     <button class="tab-btn" data-tab="orders">سفارش‌ها</button>
+        <button class="tab-btn" data-tab="stats">آمار فروش</button>
 <button class="tab-btn" data-tab="messages">پیام‌های تماس</button>
     <button class="tab-btn" data-tab="settings">تنظیمات سایت</button>
   </div>
@@ -112,6 +113,10 @@
   <div class="tab-panel" id="panel-orders">
     <div class="panel-head"><h2>مدیریت سفارش‌ها</h2></div>
     <div id="ordersTableWrap"><p class="loading-state">در حال بارگذاری...</p></div>
+  </div>
+    <div class="tab-panel" id="panel-stats">
+    <div class="panel-head"><h2>آمار فروش</h2></div>
+    <div id="statsWrap"><p class="loading-state">در حال بارگذاری...</p></div>
   </div>
   <!-- ---------- تب پیام‌های تماس ---------- -->
   <div class="tab-panel" id="panel-messages">
@@ -198,6 +203,7 @@
       btn.classList.add('active');
       document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
       if (btn.dataset.tab === 'orders') loadOrders();
+            if (btn.dataset.tab === 'stats') loadStats();
 if (btn.dataset.tab === 'settings') loadSiteSettings();
       if (btn.dataset.tab === 'messages') loadContactMessages();
     });
@@ -403,9 +409,10 @@ try {
         wrap.innerHTML = '<p class="empty-state">هنوز سفارشی ثبت نشده.</p>';
         return;
       }
+           currentOrders = orders;
       wrap.innerHTML = `
         <table>
-          <thead><tr><th>شماره سفارش</th><th>مشتری</th><th>مبلغ</th><th>وضعیت</th></tr></thead>
+          <thead><tr><th>شماره سفارش</th><th>مشتری</th><th>مبلغ</th><th>وضعیت</th><th>جزئیات</th></tr></thead>
           <tbody>
             ${orders.map(o => `
               <tr data-id="${o.id}">
@@ -417,6 +424,7 @@ try {
                     ${Object.keys(statusLabels).map(s => `<option value="${s}" ${s === o.status ? 'selected' : ''}>${statusLabels[s]}</option>`).join('')}
                   </select>
                 </td>
+                <td><button class="icon-action view-order-btn" title="جزئیات" data-id="${o.id}" style="width:auto;padding:0 14px;font-size:12px;">مشاهده</button></td>
               </tr>
             `).join('')}
           </tbody>
@@ -438,7 +446,56 @@ try {
       loadOrders();
     }
   });
+  document.getElementById('ordersTableWrap').addEventListener('click', (e) => {
+    const btn = e.target.closest('.view-order-btn');
+    if (btn) openOrderDetail(btn.dataset.id);
+  });
 
+  function openOrderDetail(id){
+    const o = currentOrders.find(x => x.id === id);
+    if (!o) return;
+    document.getElementById('orderDetailContent').innerHTML = `
+      <div style="margin-bottom:18px;">
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--ink-soft);">اطلاعات گیرنده</h4>
+        <p style="font-size:13.5px;line-height:2;">
+          ${o.customer.firstName} ${o.customer.lastName}<br>
+          ${o.customer.phone}${o.customer.email ? ' — ' + o.customer.email : ''}
+        </p>
+      </div>
+      <div style="margin-bottom:18px;">
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--ink-soft);">آدرس تحویل</h4>
+        <p style="font-size:13.5px;line-height:2;">
+          ${o.address.province}، ${o.address.city}<br>
+          ${o.address.fullAddress}<br>
+          کد پستی: ${o.address.postalCode || '—'}
+        </p>
+      </div>
+      <div>
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--ink-soft);">محصولات سفارش‌داده‌شده</h4>
+        <table>
+          <thead><tr><th>محصول</th><th>تعداد</th><th>قیمت واحد</th><th>جمع</th></tr></thead>
+          <tbody>
+            ${o.items.map(it => `
+              <tr>
+                <td>${it.name}${it.selectedColor ? ' (' + it.selectedColor + ')' : ''}</td>
+                <td>${it.qty.toLocaleString('fa-IR')}</td>
+                <td>${fmt(it.price)}</td>
+                <td>${fmt(it.lineTotal)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+    document.getElementById('orderDetailModal').classList.add('show');
+  }
+
+  document.getElementById('closeOrderDetail').addEventListener('click', () => {
+    document.getElementById('orderDetailModal').classList.remove('show');
+  });
+  document.getElementById('orderDetailModal').addEventListener('click', (e) => {
+    if (e.target.id === 'orderDetailModal') e.target.classList.remove('show');
+  });
   // -------------------- شروع --------------------
   // -------------------- تنظیمات سایت (عکس هیرو) --------------------
   let selectedHeroFile = null;
@@ -546,6 +603,69 @@ try {
           } catch (err) { alert(err.message || 'خطا رخ داد'); }
         });
       });
+    } catch (err) {
+      wrap.innerHTML = '<p class="empty-state">اتصال به سرور برقرار نشد.</p>';
+    }
+  }
+    async function loadStats(){
+    const wrap = document.getElementById('statsWrap');
+    wrap.innerHTML = '<p class="loading-state">در حال بارگذاری...</p>';
+    try {
+      const res = await adminGetOrders();
+      const orders = (res.orders || []).filter(o => o.status !== 'cancelled');
+
+      const now = new Date();
+      const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const startOfWeek = new Date(startOfDay); startOfWeek.setDate(startOfDay.getDate() - startOfDay.getDay());
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      const startOfYear = new Date(now.getFullYear(), 0, 1);
+
+      function sumSince(date){
+        return orders.filter(o => new Date(o.createdAt) >= date).reduce((sum, o) => sum + o.total, 0);
+      }
+
+      const todayTotal = sumSince(startOfDay);
+      const weekTotal = sumSince(startOfWeek);
+      const monthTotal = sumSince(startOfMonth);
+      const yearTotal = sumSince(startOfYear);
+
+      const productCount = {};
+      orders.forEach(o => {
+        (o.items || []).forEach(item => {
+          productCount[item.name] = (productCount[item.name] || 0) + item.qty;
+        });
+      });
+      const topProducts = Object.entries(productCount).sort((a,b) => b[1]-a[1]).slice(0,5);
+
+      wrap.innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;">
+          <div style="background:var(--glass);border:1px solid var(--glass-border);border-radius:14px;padding:18px;">
+            <div style="font-size:12px;color:var(--ink-soft);margin-bottom:8px;">فروش امروز</div>
+            <div style="font-size:18px;font-weight:800;">${fmt(todayTotal)}</div>
+          </div>
+          <div style="background:var(--glass);border:1px solid var(--glass-border);border-radius:14px;padding:18px;">
+            <div style="font-size:12px;color:var(--ink-soft);margin-bottom:8px;">فروش این هفته</div>
+            <div style="font-size:18px;font-weight:800;">${fmt(weekTotal)}</div>
+          </div>
+          <div style="background:var(--glass);border:1px solid var(--glass-border);border-radius:14px;padding:18px;">
+            <div style="font-size:12px;color:var(--ink-soft);margin-bottom:8px;">فروش این ماه</div>
+            <div style="font-size:18px;font-weight:800;">${fmt(monthTotal)}</div>
+          </div>
+          <div style="background:var(--glass);border:1px solid var(--glass-border);border-radius:14px;padding:18px;">
+            <div style="font-size:12px;color:var(--ink-soft);margin-bottom:8px;">فروش امسال</div>
+            <div style="font-size:18px;font-weight:800;">${fmt(yearTotal)}</div>
+          </div>
+        </div>
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:14px;">پرفروش‌ترین محصولات</h3>
+        ${topProducts.length === 0 ? '<p class="empty-state">هنوز داده‌ای موجود نیست.</p>' : `
+          <table>
+            <thead><tr><th>محصول</th><th>تعداد فروخته‌شده</th></tr></thead>
+            <tbody>
+              ${topProducts.map(([name, qty]) => `<tr><td>${name}</td><td>${qty.toLocaleString('fa-IR')}</td></tr>`).join('')}
+            </tbody>
+          </table>
+        `}
+      `;
     } catch (err) {
       wrap.innerHTML = '<p class="empty-state">اتصال به سرور برقرار نشد.</p>';
     }
