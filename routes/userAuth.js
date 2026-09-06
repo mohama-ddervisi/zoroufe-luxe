@@ -1,14 +1,16 @@
 const express = require('express');
 const router = express.Router();
+const { sendSms } = require('../utils/sms');
 const jwt = require('jsonwebtoken');
 const { readTable, writeTable } = require('../utils/db');
+
 
 // حافظه‌ی موقت کدهای تایید (چون کد فقط ۲ دقیقه اعتباره، نیازی به ذخیره‌ی دائمی نیست)
 const otpStore = {}; // { phone: { code, expiresAt } }
 
 // POST /api/user-auth/otp/request   بادی: { phone }
 // یه کد ۴ رقمی می‌سازه و *فعلاً چون سرویس پیامک وصل نیست* تو ترمینال سرور چاپش می‌کنه
-router.post('/otp/request', (req, res) => {
+router.post('/otp/request', async (req, res) => {
   const { phone } = req.body;
   if (!phone || !/^09\d{9}$/.test(phone)) {
     return res.status(400).json({ error: 'شماره موبایل معتبر نیست' });
@@ -17,14 +19,13 @@ router.post('/otp/request', (req, res) => {
   const code = String(Math.floor(1000 + Math.random() * 9000));
   otpStore[phone] = { code, expiresAt: Date.now() + 2 * 60 * 1000 };
 
-  // -------------------------------------------------------------
-  // TODO: وقتی سرویس پیامک (کاوه‌نگار/ملی‌پیامک/فرازپیامک و ...) رو خریدی،
-  // به‌جای این console.log باید کد رو واقعاً پیامک کنی، مثلاً:
-  // await sendSms(phone, `کد تایید زوروفه: ${code}`);
-  // -------------------------------------------------------------
-  console.log(`\n📱 کد تایید برای ${phone}: ${code}   (تا ۲ دقیقه معتبره)\n`);
-
-  res.json({ success: true, message: 'کد تایید ارسال شد' });
+  try {
+    await sendSms(phone, code);
+    res.json({ success: true, message: 'کد تایید ارسال شد' });
+  } catch (err) {
+    console.error('خطا در ارسال پیامک:', err.message);
+    res.status(500).json({ error: 'ارسال پیامک با خطا مواجه شد' });
+  }
 });
 
 // POST /api/user-auth/otp/verify   بادی: { phone, code }
