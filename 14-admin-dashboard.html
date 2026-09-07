@@ -139,7 +139,16 @@
     </div>
   </div>
 </div>
-
+<!-- ---------- مودال جزئیات سفارش ---------- -->
+<div class="modal-overlay" id="orderDetailModal">
+  <div class="modal-box">
+    <h3>جزئیات سفارش</h3>
+    <div id="orderDetailContent"></div>
+    <div class="modal-actions">
+      <button type="button" class="modal-cancel" id="closeOrderDetail">بستن</button>
+    </div>
+  </div>
+</div>
 <!-- ---------- مودال افزودن/ویرایش محصول ---------- -->
 <div class="modal-overlay" id="productModal">
   <div class="modal-box">
@@ -397,6 +406,7 @@ try {
   });
 
   // -------------------- سفارش‌ها --------------------
+    let currentOrders = [];
   const statusLabels = {pending:'در انتظار تایید', confirmed:'تایید شده', shipped:'ارسال شده', delivered:'تحویل داده شده', cancelled:'لغو شده'};
 
   async function loadOrders(){
