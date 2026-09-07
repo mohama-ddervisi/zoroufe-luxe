@@ -14,6 +14,7 @@ const userAuthRouter = require('./routes/userAuth');
 const wishlistRouter = require('./routes/wishlist');
 const contactRouter = require('./routes/contact');
 const app = express();
+const paymentRoutes = require('./routes/payment');
 
 app.use(cors({ origin: process.env.CLIENT_ORIGIN || '*' }));
 app.use(express.json());
@@ -33,6 +34,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
+app.use('/api/payment', paymentRoutes);
 // جلوگیری از دسترسی مستقیم به فایل‌ها و پوشه‌های حساس بک‌اند
 app.use((req, res, next) => {
   const blockedPaths = ['/server.js', '/package.json', '/package-lock.json'];

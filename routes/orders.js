@@ -46,7 +46,7 @@ router.post('/', optionalUser, async (req, res) => {
     address,
     paymentMethod,
     userId: req.user ? req.user.userId : null,
-    status: 'pending',
+    status: paymentMethod === 'gateway' ? 'pending_payment' : 'pending',
     createdAt: new Date().toISOString()
   };
 
@@ -96,5 +96,6 @@ router.put('/:id/status', requireAdmin, async (req, res) => {
   await writeTable('orders', orders);
   res.json(order);
 });
+
 
 module.exports = router;

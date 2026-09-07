@@ -232,7 +232,15 @@
   });
 
   const fmt = n => Math.round(n).toLocaleString('fa-IR') + ' ت';
-
+async function startPayment(orderId) {
+  const res = await fetch('/api/payment/start', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ orderId })
+  });
+  if (!res.ok) throw new Error('خطا در اتصال به درگاه پرداخت');
+  return res.json();
+}
   // ---------------- خلاصه‌ی سفارش از سبد خرید واقعی ----------------
   async function loadSummary(){
     try {
@@ -302,9 +310,16 @@
 
     try {
       const order = await placeOrder({ customer, address, paymentMethod: selectedPayMethod });
+      refreshCartBadge();
+
+      if (selectedPayMethod === 'gateway') {
+        const payment = await startPayment(order.id);
+        window.location.href = payment.paymentUrl; // هدایت به درگاه زیبال
+        return;
+      }
+
       document.getElementById('orderNumberLabel').textContent = order.orderNumber;
       document.getElementById('successOverlay').classList.add('show');
-      refreshCartBadge();
     } catch (err) {
       errEl.textContent = err.message || 'ثبت سفارش با خطا مواجه شد. دوباره تلاش کن.';
       errEl.style.display = 'block';

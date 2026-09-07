@@ -151,7 +151,7 @@
   <div class="breadcrumb"><a href="index.html">خانه</a> / پیگیری سفارش</div>
   <h1 class="page-title">پیگیری سفارش</h1>
   <p class="page-lead">شماره سفارشت رو وارد کن تا وضعیت لحظه‌ای ارسالش رو ببینی.</p>
-
+<div id="paymentBanner" style="display:none;padding:16px 20px;border-radius:14px;margin-bottom:24px;font-size:14px;font-weight:600;"></div>
   <div class="track-box">
     <div class="track-row">
       <input type="text" id="orderNumInput" placeholder="مثال: ZR-42819">
@@ -236,7 +236,10 @@
   
 const statusSteps = ['pending','confirmed','shipped','delivered'];
     let currentOrders = [];
-const statusLabels = {pending:'در انتظار تایید', confirmed:'تایید شده', shipped:'ارسال شده', delivered:'تحویل داده شده'};
+const statusLabels = {
+  pending:'در انتظار تایید', confirmed:'تایید شده', shipped:'ارسال شده', delivered:'تحویل داده شده',
+  pending_payment:'در انتظار پرداخت', paid:'پرداخت شد - در انتظار تایید', payment_failed:'پرداخت ناموفق', payment_mismatch:'خطا در تایید مبلغ'
+};
   const stepDefs = [
     {key:'pending', title:'ثبت سفارش', desc:'سفارش شما با موفقیت ثبت شد'},
     {key:'confirmed', title:'تایید سفارش', desc:'سفارش شما توسط فروشگاه تایید شد'},
@@ -268,7 +271,30 @@ const statusLabels = {pending:'در انتظار تایید', confirmed:'تای�
       errEl.classList.add('show');
     }
   }
+(function checkPaymentReturn(){
+  const params = new URLSearchParams(window.location.search);
+  const orderNumber = params.get('orderNumber');
+  const status = params.get('status');
+  if (!orderNumber) return;
 
+  const banner = document.getElementById('paymentBanner');
+  const messages = {
+    paid: { text: '✅ پرداخت شما موفق بود. سفارش‌تون ثبت شد.', bg: 'rgba(62,224,196,0.15)', color: '#3EE0C4' },
+    failed: { text: '❌ پرداخت ناموفق بود یا لغو شد. می‌تونید دوباره تلاش کنید.', bg: 'rgba(255,107,129,0.15)', color: '#FF6B81' },
+    payment_mismatch: { text: '⚠️ در تایید مبلغ پرداختی مشکلی پیش اومد، با پشتیبانی تماس بگیرید.', bg: 'rgba(255,107,129,0.15)', color: '#FF6B81' },
+    error: { text: '❌ خطایی در ارتباط با درگاه پرداخت رخ داد.', bg: 'rgba(255,107,129,0.15)', color: '#FF6B81' }
+  };
+  const m = messages[status];
+  if (m) {
+    banner.textContent = m.text;
+    banner.style.background = m.bg;
+    banner.style.color = m.color;
+    banner.style.display = 'block';
+  }
+
+  document.getElementById('orderNumInput').value = orderNumber;
+  trackOrder();
+})();
   document.getElementById('trackBtn').addEventListener('click', trackOrder);
   document.getElementById('orderNumInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') trackOrder(); });
 
