@@ -17,7 +17,7 @@ router.post('/start', async (req, res) => {
       return res.status(400).json({ message: 'این سفارش قبلاً پرداخت شده' });
     }
 
-    const amountRial = order.total;
+   const amountRial = order.total * 10;
 
     const response = await fetch('https://gateway.zibal.ir/v1/request', {
       method: 'POST',
@@ -70,7 +70,7 @@ router.get('/callback', async (req, res) => {
     const data = await response.json();
 
     if (data.result === 100 || data.result === 201) {
-      if (data.amount !== order.total) {
+      if (data.amount !== order.total * 10) {
         order.status = 'payment_mismatch';
       } else {
         order.status = 'paid';

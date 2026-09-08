@@ -233,7 +233,7 @@
 
   const fmt = n => Math.round(n).toLocaleString('fa-IR') + ' ت';
 async function startPayment(orderId) {
-  const res = await fetch('/api/payment/start', {
+  const res = await fetch(`${API_BASE}/payment/start`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ orderId })
