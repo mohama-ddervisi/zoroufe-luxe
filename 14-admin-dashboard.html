@@ -225,7 +225,7 @@ if (btn.dataset.tab === 'settings') loadSiteSettings();
   async function loadProducts(){
     const wrap = document.getElementById('productsTableWrap');
     try {
-      const res = await getProducts();
+      const res = await getProducts({ limit: 1000 });
       const products = res.products || [];
       if (products.length === 0){
         wrap.innerHTML = '<p class="empty-state">هنوز محصولی ثبت نشده.</p>';
@@ -337,7 +337,7 @@ let selectedImageFile = null;
 
     if (editBtn){
       const id = editBtn.dataset.id;
-      const res = await getProducts();
+      const res = await getProducts({ limit: 1000 });
       const product = (res.products || []).find(p => p.id === id);
       if (product) openModal(product);
     }
