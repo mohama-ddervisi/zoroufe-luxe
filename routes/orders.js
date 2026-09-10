@@ -78,7 +78,14 @@ router.get('/:id', async (req, res) => {
 // GET /api/orders - لیست همه‌ی سفارش‌ها (فقط ادمین، برای پنل مدیریت)
 router.get('/', requireAdmin, async (req, res) => {
   const orders = await readTable('orders');
-  res.json({ count: orders.length, orders: [...orders].reverse() });
+  // سفارش‌های پرداخت آنلاین که هنوز واقعاً پرداخت نشدن (منتظر/ناموفق/مغایر) رو نشون نده
+  const visible = orders.filter(o => {
+    if (o.paymentMethod === 'gateway') {
+      return !['pending_payment', 'payment_failed', 'payment_mismatch'].includes(o.status);
+    }
+    return true;
+  });
+  res.json({ count: visible.length, orders: [...visible].reverse() });
 });
 
 // PUT /api/orders/:id/status - تغییر وضعیت سفارش (فقط ادمین)
