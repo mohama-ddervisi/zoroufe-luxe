@@ -51,7 +51,7 @@ router.post('/start', async (req, res) => {
 router.get('/callback', async (req, res) => {
   const { trackId, success, orderId } = req.query;
   const orders = await db.readTable('orders');
-  const order = orders.find(o => o.id === orderId);
+  const order = orders.find(o => o.id === orderId || o.orderNumber === orderId);
 
   if (!order) return res.redirect('/11-order-tracking.html?error=notfound');
 
